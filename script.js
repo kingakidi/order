@@ -92,9 +92,12 @@ orderForm.addEventListener("submit", (e) => {
           data === "<div class='text-success'> Order Placed Successfully </div>"
         ) {
           show.innerHTML = data;
+          btn.disabled = true;
         } else {
           show.innerHTML = error(data);
+          btn.disabled = false;
         }
+        btn.innerHTML = "Place Request";
       },
     });
   } else {
@@ -185,5 +188,38 @@ btnPendingOrders.forEach((el) => {
     popupClose.addEventListener("click", () => {
       popupPage.style.display = "none";
     });
+  });
+});
+
+// TOGGLES
+let orderBtn = _("place-order");
+let showItems = _("show-items");
+let transactionTable = _("transaction-table");
+orderBtn.addEventListener("click", () => {
+  // GET PLACE OTHER FORM
+  $.ajax({
+    url: url,
+    method: "POST",
+    data: {
+      getPlaceOrderForm: true,
+    },
+    success(data) {
+      showItems.innerHTML = data;
+    },
+  });
+});
+
+// TRANSACTION TABLES
+transactionTable.addEventListener("click", () => {
+  // GET PLACE OTHER FORM
+  $.ajax({
+    url: url,
+    method: "POST",
+    data: {
+      getTransactionTable: true,
+    },
+    success(data) {
+      showItems.innerHTML = data;
+    },
   });
 });

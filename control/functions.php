@@ -15,7 +15,20 @@
         return "<div class='text-success'> $val </div>";
     };
 
-   
+    function verifyUsername($username){
+        global $conn; 
+        $uQuery = $conn->query("SELECT * FROM users WHERE username='$username'"); 
+        if (!$uQuery) {
+            die($conn->error);
+        }else{
+            if ($uQuery->num_rows > 0) {
+                $dbFullname = $uQuery->fetch_assoc()['fullname'];
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
     function merchantDetailsById($id){
         global $conn; 
         $uQuery = $conn->query("SELECT * FROM users WHERE users.id = $id");
