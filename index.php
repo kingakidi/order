@@ -90,6 +90,61 @@
         </div>
       </form>
     </div>
+
+    <div class="order-list">
+      <h3>Transaction List</h3>
+       <div class="list-container">
+        <?php
+          require("./control/conn.php");
+
+          $username = "sydee";
+          $myOrdersQuery = $conn->query("SELECT * FROM request_table WHERE customer_username='$username' ORDER BY request_table.id DESC");
+          if (!$myOrdersQuery) {
+           die($conn->error);
+          }else{
+            if ($myOrdersQuery->num_rows > 0 ) {
+           
+              
+            $sn = 1;
+            while ($row = $myOrdersQuery->fetch_assoc()) {
+              extract($row);
+            
+              echo " <ol class='single-list $status'>
+              <li> $sn </li>
+              <li> $customer_username is sending you $outcome $food_name </li>";
+
+              if ($status === 'pending') {
+                echo "<li><button class='btn-order-pending' data-order-id=$id name='btn-pending-orders'> Click here to view and Accept </button></li>
+             ";
+              }else if($status === "completed"){
+                echo "<li><button class='btn-order-completed' disabled> Completed </button></li>
+                ";
+              }
+              echo "</ol>";
+              $sn++;
+            }
+           
+            }else{
+              echo "<h3> You have no order at the moment </h3>";
+            }
+            
+          }
+        
+        ?>
+        </div>
+    </div>
+
+    <div class="popup-page" id="popup-page">
+      <div class="popup-content" id="popup-content">
+      <div class="popup-close form-group text-end">
+          <button id="popup-close" class="btn btn-danger">Close</button>
+        </div>
+        <div class="show-popup-content" id="show-popup-content">
+            
+        </div>
+       
+      </div>
+    </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
       integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="

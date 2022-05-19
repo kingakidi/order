@@ -13,7 +13,13 @@ let error = ($val) => {
 let success = ($val) => {
   return `<div class="text-success"> ${$val} </div>`;
 };
-
+let popupPage = _("popup-page");
+let popupClose = _("popup-close");
+let showPopupContent = _("show-popup-content");
+// console.log(popupPage.style.display);
+popupPage.addEventListener("click", () => {
+  console.log(popupBtn.style.display);
+});
 let url = "./control/control.php";
 let orderForm = _("order-form");
 let foodList = _("food-list");
@@ -63,8 +69,53 @@ orderForm.addEventListener("submit", (e) => {
     clean(gram) > 0 &&
     clean(outcome) > 0
   ) {
-    show.innerHTML = success("Good to go ");
+    // show.innerHTML = success("Good to go ");
+    $.ajax({
+      url: url,
+      method: "POST",
+      data: {
+        foodList: foodList.value,
+        customerUsername: customerUsername.value,
+        amount: amount.value,
+        orderType: orderType.value,
+        gram: gram.value,
+        outcome: outcome.value,
+        sendOrder: true,
+      },
+      beforeSend() {
+        btn.disabled = true;
+        btn.innerHTML = "Loading...";
+        show.innerHTML = "Placing your order...";
+      },
+      success(data) {
+        // console.log(data);
+
+        if (
+          data === "<div class='text-success'> Order Placed Successfully </div>"
+        ) {
+          show.innerHTML = data;
+        } else {
+          show.innerHTML = error(data);
+        }
+      },
+    });
   } else {
     show.innerHTML = error("All fields required");
   }
+});
+
+// PENDING ORDERS
+
+let btnPendingOrders = document.getElementsByName("btn-pending-orders");
+btnPendingOrders.forEach((el) => {
+  el.addEventListener("click", () => {
+    let orderId = el.getAttribute("data-order-id");
+    popupPage.style.display = "block";
+
+    showPopupContent.innerHTML = "Loading...";
+
+    popupClose.addEventListener("click", () => {
+      popupPage.style.display = "none";
+    });
+  });
 });

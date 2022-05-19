@@ -39,8 +39,9 @@ input {
 }
 
 #check-username {
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 10px;
 }
 
 .order-form {
@@ -54,4 +55,74 @@ input {
   display: block;
   width: 100%;
   color: #fff;
+}
+
+/* ORDER SECTION  */
+.pending {
+  background-color: #ff78495c;
+}
+.completed {
+  background-color: #cfedb5bd;
+}
+
+/* .pending button,
+.completed button {
+  
+} */
+.order-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.single-list {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.single-list li {
+  margin: 10px;
+}
+
+.single-list button {
+  width: 150px;
+  padding: 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+}
+.btn-order-pending {
+  background-color: #060301;
+  color: #fff;
+}
+.btn-order-completed {
+  background-color: rgb(11, 248, 217);
+  color: #060301;
+}
+
+/* POPUP STYLING  */
+.popup-page {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.25);
+  display: none;
+}
+
+.popup-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  height: 90%;
+  overflow-y: auto;
+  border-radius: 5px;
 }
