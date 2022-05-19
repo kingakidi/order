@@ -131,10 +131,11 @@ btnPendingOrders.forEach((el) => {
       let decline = _("btn-decline");
       let showStatus = _("show-status");
       accept.addEventListener("click", () => {
-        console.log(orderId);
+        // console.log(orderId);
 
         $.ajax({
           url: url,
+          method: "POST",
           data: {
             acceptOrder: true,
             orderId: orderId,
@@ -142,15 +143,43 @@ btnPendingOrders.forEach((el) => {
           beforeSend() {
             accept.disabled = true;
             decline.disabled = true;
+            showStatus.innerHTML = "";
           },
           success(data) {
-            showStatus.innerHTML = data;
+            if (data === "Order Submitted") {
+              alert(data);
+              location.reload();
+            } else {
+              showStatus.innerHTML = data;
+            }
+            console.log(data);
           },
         });
       });
       //   DECLINE ORDER
       decline.addEventListener("click", () => {
-        console.log(orderId);
+        $.ajax({
+          url: url,
+          method: "POST",
+          data: {
+            declineOrder: true,
+            orderId: orderId,
+          },
+          beforeSend() {
+            accept.disabled = true;
+            decline.disabled = true;
+            showStatus.innerHTML = "";
+          },
+          success(data) {
+            if (data === "Order Declined") {
+              alert(data);
+              location.reload();
+            } else {
+              showStatus.innerHTML = data;
+            }
+            console.log(data);
+          },
+        });
       });
     });
     popupClose.addEventListener("click", () => {

@@ -69,5 +69,25 @@
        extract($_POST);
        $orderId = clean($orderId);
 
-       $uOrderQuery= $conn->query("");
+       $uOrderQuery= $conn->query("UPDATE `request_table` SET request_table.status ='completed' WHERE request_table.id = $orderId");
+
+       if (!$uOrderQuery) {
+           die($conn->error);
+       }else{
+           echo "Order Submitted";
+       }
     }
+
+    // DECLINE ORDER  
+    if (isset($_POST['declineOrder'])) {
+        extract($_POST);
+        $orderId = clean($orderId);
+ 
+        $uOrderQuery= $conn->query("UPDATE `request_table` SET request_table.status ='declined' WHERE request_table.id = $orderId");
+ 
+        if (!$uOrderQuery) {
+            die($conn->error);
+        }else{
+            echo "Order Declined";
+        }
+     }

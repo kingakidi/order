@@ -120,6 +120,9 @@
               }else if($status === "completed"){
                 echo "<li><button class='btn-order-completed' disabled> Completed </button></li>
                 ";
+              }else if($status === "declined"){
+                echo "<li><button class='btn-order-declined' disabled> Declined </button></li>
+                ";
               }
               echo "</ol>";
               $sn++;

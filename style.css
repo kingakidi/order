@@ -101,6 +101,10 @@ input {
   background-color: rgb(11, 248, 217);
   color: #060301;
 }
+.btn-order-declined {
+  background-color: rgb(141, 141, 8);
+  color: #fff;
+}
 
 /* POPUP STYLING  */
 .popup-page {
