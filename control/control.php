@@ -1,18 +1,5 @@
 <?php
-    require_once("conn.php");
-
-    function clean($val){
-        global $conn;
-        return mysqli_real_escape_string($conn, strtolower(trim($val)));
-    }
-
-    function error($val){
-        return "<div class='text-danger'> $val </div>";
-    };
-      
-    function success($val) {
-        return "<div class='text-success'> $val </div>";
-    };
+    require("./functions.php");
 
     function verifyUsername($username){
         global $conn; 
@@ -28,24 +15,7 @@
             }
         }
     }
-    if (isset($_POST['verifyUsername'])) {
-        extract($_POST);
-        $username = clean($username);
-        $uQuery = $conn->query("SELECT * FROM users WHERE username='$username'"); 
-        if (!$uQuery) {
-            die($conn->error);
-        }else{
-            if ($uQuery->num_rows > 0) {
-               $dbFullname = $uQuery->fetch_assoc()['fullname'];
-               echo $dbFullname;
-            }else{
-                echo "Invalid Username";
-            }
-        }
-    }
 
-
-   $user_id = 1;
     if (isset($_POST['sendOrder'])) {
         extract($_POST);
         $foodList = clean($foodList);
@@ -71,4 +41,33 @@
         }else{
             echo error("All fields required");
         }
+    }
+
+
+    if (isset($_POST['getMerchantPaymentDetails'])) {
+        extract($_POST);
+        $merchantId = $getMerchantPaymentDetails;
+        $merchant = merchantDetailsById($merchantId);
+        $request = getRequestDetailsById($orderId);
+        extract($merchant);
+        extract($request);
+       
+        $merchant_username =  ucwords($merchant['username']);
+        $grams = $request['gram'];
+        $amount = $request['amount'];
+        echo "<div class='single-request '> <p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr> Make payment to <br> Account Number: $account_number <br> Bank: $bank_name <br> Fullname: $fullname</p> 
+        <div id='show-status'></div>
+        <div>
+            <button id='btn-accept'> Accept </button>
+            <button id='btn-decline'> Decline </button>
+        </div> 
+        </div>";
+    }
+
+    // ACCEPT ORDER  
+    if (isset($_POST['acceptOrder'])) {
+       extract($_POST);
+       $orderId = clean($orderId);
+
+       $uOrderQuery= $conn->query("");
     }

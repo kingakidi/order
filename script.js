@@ -17,9 +17,7 @@ let popupPage = _("popup-page");
 let popupClose = _("popup-close");
 let showPopupContent = _("show-popup-content");
 // console.log(popupPage.style.display);
-popupPage.addEventListener("click", () => {
-  console.log(popupBtn.style.display);
-});
+
 let url = "./control/control.php";
 let orderForm = _("order-form");
 let foodList = _("food-list");
@@ -110,10 +108,51 @@ let btnPendingOrders = document.getElementsByName("btn-pending-orders");
 btnPendingOrders.forEach((el) => {
   el.addEventListener("click", () => {
     let orderId = el.getAttribute("data-order-id");
+    let merchantId = el.getAttribute("data-merchant-id");
+
     popupPage.style.display = "block";
 
     showPopupContent.innerHTML = "Loading...";
+    showPopupContent.innerHTML = merchantId;
+    // payment request
+    $.ajax({
+      url: url,
+      method: "POST",
+      data: {
+        getMerchantPaymentDetails: merchantId,
+        orderId: orderId,
+      },
+      beforeSend() {},
+      success(data) {
+        showPopupContent.innerHTML = data;
+      },
+    }).done(() => {
+      let accept = _("btn-accept");
+      let decline = _("btn-decline");
+      let showStatus = _("show-status");
+      accept.addEventListener("click", () => {
+        console.log(orderId);
 
+        $.ajax({
+          url: url,
+          data: {
+            acceptOrder: true,
+            orderId: orderId,
+          },
+          beforeSend() {
+            accept.disabled = true;
+            decline.disabled = true;
+          },
+          success(data) {
+            showStatus.innerHTML = data;
+          },
+        });
+      });
+      //   DECLINE ORDER
+      decline.addEventListener("click", () => {
+        console.log(orderId);
+      });
+    });
     popupClose.addEventListener("click", () => {
       popupPage.style.display = "none";
     });

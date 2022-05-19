@@ -95,9 +95,9 @@
       <h3>Transaction List</h3>
        <div class="list-container">
         <?php
-          require("./control/conn.php");
+          require("./control/functions.php");
 
-          $username = "sydee";
+         
           $myOrdersQuery = $conn->query("SELECT * FROM request_table WHERE customer_username='$username' ORDER BY request_table.id DESC");
           if (!$myOrdersQuery) {
            die($conn->error);
@@ -108,13 +108,14 @@
             $sn = 1;
             while ($row = $myOrdersQuery->fetch_assoc()) {
               extract($row);
-            
+              $merchant = merchantDetailsById($merchant_id);
+              $merchant_username =  ucwords($merchant['username']);
               echo " <ol class='single-list $status'>
               <li> $sn </li>
-              <li> $customer_username is sending you $outcome $food_name </li>";
+              <li> $merchant_username is sending you $outcome $food_name </li>";
 
               if ($status === 'pending') {
-                echo "<li><button class='btn-order-pending' data-order-id=$id name='btn-pending-orders'> Click here to view and Accept </button></li>
+                echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-order-id=$id name='btn-pending-orders'> Click here to view and Accept </button></li>
              ";
               }else if($status === "completed"){
                 echo "<li><button class='btn-order-completed' disabled> Completed </button></li>
@@ -137,7 +138,7 @@
     <div class="popup-page" id="popup-page">
       <div class="popup-content" id="popup-content">
       <div class="popup-close form-group text-end">
-          <button id="popup-close" class="btn btn-danger">Close</button>
+          <button id="popup-close" class="btn btn-danger">X</button>
         </div>
         <div class="show-popup-content" id="show-popup-content">
             
