@@ -8,7 +8,17 @@ html,
 body {
   height: 100%;
 }
-
+body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .form-container {
   margin-top: 20px;
   display: flex;
@@ -180,4 +190,15 @@ input {
 
 .btn-toggle:hover {
   padding: 15px 62px;
+}
+
+@media (max-width: 550px) {
+  #app {
+    width: 90%;
+  }
+}
+@media (max-width: 450px) {
+  #popup-content {
+    width: 90%;
+  }
 }

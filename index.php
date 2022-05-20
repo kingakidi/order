@@ -12,15 +12,15 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="toggle-container" id="toggle-container">
-      <button class="btn-toggle" id="place-order">Place Order</button><button class="btn-toggle" id="transaction-table">Transaction Tables</button>
+    <div id="app">
+      <div class="toggle-container" id="toggle-container">
+        <button class="btn-toggle" id="place-order">Place Order</button><button class="btn-toggle" id="transaction-table">Transaction Tables</button>
 
 
+      </div>
+
+      <main id="show-items"></main>
     </div>
-
-    <main id="show-items">
-
-    </main>
 
    
 
