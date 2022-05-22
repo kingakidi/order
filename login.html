@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+  </head>
+  <body>
+    <div data-testid="card" class="card">
+      <div class="card-content">
+        <form>
+          <h4 class="auth__title">Sign in</h4>
+          <div class="input-container input-container__error">
+            <label class="caption caption-semibold">Email</label>
+            <div class="input-display">
+              <input
+                name="email"
+                type="email"
+                autocomplete="new-password"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="input-container input-container__focused input-addon-container"
+          >
+            <label class="caption caption-semibold">Password</label>
+            <div class="input-display">
+              <input
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                value="Uma'aki@oBor123"
+              />
+              <div class="input-addon input-addon__right">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15.621 7.016c-1.763-1.94-4.688-3.99-7.62-3.95-2.934-.041-5.859 2.01-7.622 3.95a1.474 1.474 0 000 1.965c1.742 1.92 4.626 3.952 7.514 3.952h.205c2.898 0 5.78-2.032 7.525-3.952a1.473 1.473 0 00-.002-1.965zM4.933 8a3.067 3.067 0 116.134 0 3.067 3.067 0 01-6.134 0z"
+                    fill="#737A91"
+                  ></path>
+                  <path
+                    d="M8 9.333a1.333 1.333 0 100-2.666 1.333 1.333 0 000 2.666z"
+                    fill="#737A91"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <button
+            data-testid="button"
+            class="button primary-button md-button"
+            type="submit"
+            disabled=""
+          >
+            <span data-testid="button-loader" class="okra-loader"></span>
+            <div class="button-text">Login</div></button
+          ><a class="center-text spaced p medium" href="/reset-password"
+            >Forgot Your Password?</a
+          >
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

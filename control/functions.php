@@ -47,3 +47,54 @@
           return $uQuery->fetch_assoc();
         }
     }
+
+    // USERNAME CHECK 
+    function usernameCheck($val){
+        global $conn; 
+
+        $query = $conn->query("SELECT * FROM users WHERE users.username = '$val'");
+
+        if (!$query) {
+            die("Network Error");
+        }else{
+            if($query->num_rows > 0){
+                return true; 
+            }else{
+                return false; 
+            }
+        }
+    }
+
+    // EMAIL CHECK 
+    function emailCheck($val){
+        global $conn; 
+
+        $query = $conn->query("SELECT * FROM users WHERE users.email = '$val'");
+
+        if (!$query) {
+            die("Network Error");
+        }else{
+            if($query->num_rows > 0){
+                return true; 
+            }else{
+                return false; 
+            }
+        }
+    }
+
+    // PHONE NUMBER CHECK 
+    function phoneCheck($val){
+        global $conn; 
+
+        $query = $conn->query("SELECT * FROM users WHERE users.phone = '$val'");
+
+        if (!$query) {
+            die("Network Error");
+        }else{
+            if($query->num_rows > 0){
+                return true; 
+            }else{
+                return false; 
+            }
+        }
+    }

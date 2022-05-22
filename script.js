@@ -1,22 +1,3 @@
-let _ = ($val) => {
-  return document.getElementById($val);
-};
-
-let clean = ($val) => {
-  return $val.value.trim().length;
-};
-
-let error = ($val) => {
-  return `<div class="text-danger"> ${$val} </div>`;
-};
-
-let success = ($val) => {
-  return `<div class="text-success"> ${$val} </div>`;
-};
-let popupPage = _("popup-page");
-let popupClose = _("popup-close");
-let showPopupContent = _("show-popup-content");
-let url = "./control/control.php";
 // console.log(popupPage.style.display);
 
 // TOGGLES
@@ -45,7 +26,7 @@ orderBtn.addEventListener("click", () => {
     let show = _("show");
     let btn = _("btn-order");
     let usernameCheck = _("check-username");
-    console.log(usernameCheck);
+
     // CHECK USERNAME ON FOCUS OUT
     customerUsername.addEventListener("focusout", () => {
       if (clean(customerUsername) > 0) {

@@ -2,8 +2,55 @@
     require("./functions.php");
 
 
-    // PLACE ORDER REQUEST 
-    
+    if (isset($_POST['registerUser'])) {
+       extract($_POST);
+        $username = clean($username);
+        $fullname = clean($fullname);
+        $email = clean($email);
+        $phone = clean($phone); 
+        $bank = clean($bank);
+        $account = clean($account); 
+        $password = ($password);
+
+        if (!empty($username) AND !empty($fullname) AND !empty($email) AND !empty($phone) AND !empty($bank) AND !empty($account) AND !empty($password)) {
+           
+            // CHECK FOR VALID USERNAME 
+           if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                echo error("Invalid Email Address");
+           }else if (usernameCheck($username)) {
+                echo error("Username already exist");
+            } else if(emailCheck($email)){
+                echo error("Email already Exist ");
+            }else if(phoneCheck($phone)){
+                echo error("Phone number already exist");
+            }else if (strlen($password) < 6) {
+                echo error("Password is too short");
+            }else{
+                    $nPassword = password_hash($password, PASSWORD_DEFAULT);
+
+                    $query = $query("INSERT INTO users (username, fullname, email, phone, bank_code, account, users.password) VALUES ('$username', '$fullname','$emial', '$phone', '$bank', '$account', '$password')"); 
+
+                    if (!$query) {
+                        die($conn->error);
+                    }else{
+                        echo "Register Successfully";
+                    }
+
+                // SEND ALL TO DB 
+
+            }
+
+            // CHECK FOR PASSWORD LENGTH  
+
+            // CHECK FOR EMAIL VALIDITY 
+        }else{
+            echo error("All fields required");
+        }
+    }
+
+
+
+    // PLACE ORDER REQUEST
     if (isset($_POST['getPlaceOrderForm'])) {
        echo "<div class='form-container'>
         <h3>Order Request Form</h3>
@@ -137,7 +184,20 @@
 
 
 
-
+    if (isset($_POST['verifyUsernameExist'])) {
+        extract($_POST);
+        $username = clean($username);
+        $uQuery = $conn->query("SELECT * FROM users WHERE username='$username'"); 
+        if (!$uQuery) {
+            die($conn->error);
+        }else{
+            if ($uQuery->num_rows > 0) {
+               echo "Username is taken";
+            }else{
+                echo "Username is valid";
+            }
+        }
+    }
     if (isset($_POST['verifyUsername'])) {
         extract($_POST);
         $username = clean($username);
