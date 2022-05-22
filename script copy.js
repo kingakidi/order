@@ -2,7 +2,7 @@
 
 // TOGGLES
 let orderBtn = _("place-order");
-let showItems = _("show-actions");
+let showItems = _("show-items");
 let transactionTable = _("transaction-table");
 orderBtn.addEventListener("click", () => {
   // GET PLACE OTHER FORM

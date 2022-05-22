@@ -89,7 +89,7 @@
     // PLACE ORDER REQUEST
     if (isset($_POST['getPlaceOrderForm'])) {
        echo "<div class='form-container'>
-        <h3>Order Request Form</h3>
+        <h3>Food Request Form</h3>
         <form class='order-form' id='order-form'>
             <div class='row'>
             <div class='col-sm'>
@@ -108,18 +108,18 @@
                 </select>
                 </div>
                 <div class='form-group'>
-                <label for='customer-username'> Customer Username </label>
+                <label for='customer-username' class='mt-3'> Customer Username </label>
                 <input
                     type='text'
                     placeholder='Customer Username'
-                    class='form-control'
+                    class='form-control order-input'
                     id='customer-username'
                     required
                 />
                 <div id='check-username'></div>
                 </div>
                 <div class='form-group'>
-                <label for='amount'>Amount</label>
+                <label for='amount' class='mt-3'>Amount</label>
                 <input
                     type='number'
                     class='form-control'

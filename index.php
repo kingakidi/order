@@ -10,7 +10,7 @@
 
       </div>
 
-      <main id="show-items"></main>
+      <main id="show-items" ></main>
     </div>
 
    
