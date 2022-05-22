@@ -33,7 +33,7 @@
         global $conn; 
         $uQuery = $conn->query("SELECT * FROM users WHERE users.id = $id");
         if (!$uQuery) {
-          die($uQuery->error);
+          die($conn->error);
         }else{
           return $uQuery->fetch_assoc();
         }

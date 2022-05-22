@@ -33,7 +33,7 @@
         <main class="dashboard-main">
           <section class="action">
             <button class="btn-action" id="transaction-table">Payments</button
-            ><button class="btn-action">Users</button
+            ><button class="btn-action" id="all-users">Users</button
             ><button class="btn-action" id="place-order">Foods</button>
           </section>
           <section class="cards">
@@ -59,6 +59,7 @@
                       $sn = 1;
                       while ($row = $myOrdersQuery->fetch_assoc()) {
                         extract($row);
+                        $merchant_id = $_SESSION['oId'];
                         $merchant = merchantDetailsById($merchant_id);
                         // print_r($merchant);
                         $merchant_username =  ucwords($merchant['username']);

@@ -67,6 +67,8 @@
                         if (password_verify($password, $row['password'])) {
                         //    SET THE SESSIONS AND ECHO SUCCESS 
                             $_SESSION['oUsername'] = $row['username'];
+                            $_SESSION['oId'] = $row['id'];
+
                             $_SESSION['oEmail'] = $row['email'];
                             $_SESSION['phone'] = $row['phone'];
                             echo "Login Successfully";
@@ -94,7 +96,7 @@
             <div class='row'>
             <div class='col-sm'>
                 <div class='form-group'>
-                <label for='food-list'>Select Food</label>
+                <label for='food-list' class='mt-3'>Select Food</label>
                 <select
                     name='food-list'
                     id='food-list'
@@ -112,7 +114,7 @@
                 <input
                     type='text'
                     placeholder='Customer Username'
-                    class='form-control order-input'
+                    class='form-control order-input mb-0'
                     id='customer-username'
                     required
                 />
@@ -130,7 +132,7 @@
             </div>
             <div class='col-sm'>
                 <div class='form-group'>
-                <label for='order-type'>Buying or Selling</label>
+                <label for='order-type' class='mt-3'>Buying or Selling</label>
                 <select name='order-type' id='order-type' class='form-control'>
                     <option value='' selected disabled>Choose...</option>
     
@@ -139,16 +141,16 @@
                 </select>
                 </div>
                 <div class='form-group'>
-                <label for='gram'>Gram</label>
+                <label for='gram' class='mt-3'>Gram</label>
                 <input
                     type='number'
                     id='gram'
-                    class='form-control'
+                    class='form-control order-input'
                     placeholder='Gram'
                 />
                 </div>
                 <div class='form-group'>
-                <label for='outcome'>Outcome</label>
+                <label for='outcome' class='mt-3'>Outcome</label>
                 <input
                     type='number'
                     id='outcome'
