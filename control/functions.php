@@ -55,7 +55,7 @@
         $query = $conn->query("SELECT * FROM users WHERE users.username = '$val'");
 
         if (!$query) {
-            die("Network Error");
+            die("Unable to verify username");
         }else{
             if($query->num_rows > 0){
                 return true; 
@@ -72,7 +72,7 @@
         $query = $conn->query("SELECT * FROM users WHERE users.email = '$val'");
 
         if (!$query) {
-            die("Network Error");
+            die("Unable to verify email address");
         }else{
             if($query->num_rows > 0){
                 return true; 
@@ -89,7 +89,7 @@
         $query = $conn->query("SELECT * FROM users WHERE users.phone = '$val'");
 
         if (!$query) {
-            die("Network Error");
+            die("Unable to verify phone number");
         }else{
             if($query->num_rows > 0){
                 return true; 

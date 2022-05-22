@@ -74,6 +74,12 @@ register.addEventListener("submit", (e) => {
         beforeSend() {},
         success(data) {
           show.innerHTML = data;
+          if (data === "Register Successfully") {
+            show.innerHTML = success(data);
+            location.replace("./login.php?register=successfully");
+          } else {
+            show.innerHTML = error(data);
+          }
           console.log(data);
         },
       });

@@ -28,7 +28,7 @@
             }else{
                     $nPassword = password_hash($password, PASSWORD_DEFAULT);
 
-                    $query = $query("INSERT INTO users (username, fullname, email, phone, bank_code, account, users.password) VALUES ('$username', '$fullname','$emial', '$phone', '$bank', '$account', '$password')"); 
+                    $query = $conn->query("INSERT INTO users (username, fullname, email, phone, bank_name, account_number, users.password) VALUES ('$username', '$fullname','$email', '$phone', '$bank', '$account', '$password')"); 
 
                     if (!$query) {
                         die($conn->error);
