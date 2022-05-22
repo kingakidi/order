@@ -28,7 +28,7 @@
             }else{
                     $nPassword = password_hash($password, PASSWORD_DEFAULT);
 
-                    $query = $conn->query("INSERT INTO users (username, fullname, email, phone, bank_name, account_number, users.password) VALUES ('$username', '$fullname','$email', '$phone', '$bank', '$account', '$password')"); 
+                    $query = $conn->query("INSERT INTO users (username, fullname, email, phone, bank_code, account_number, users.password) VALUES ('$username', '$fullname','$email', '$phone', '$bank', '$account', '$nPassword')"); 
 
                     if (!$query) {
                         die($conn->error);
@@ -48,6 +48,42 @@
         }
     }
 
+    // LOGIN USER 
+    if (isset($_POST['loginUser'])) {
+       extract($_POST);
+       $username = clean($username);
+
+        // CHECK FOR USERNAME EXIST 
+        $uQuery = $conn->query("SELECT * FROM users WHERE users.username = '$username' LIMIT 1");
+
+        if (!$uQuery) {
+            die("Unable to verify username");
+        }else{
+            if($uQuery->num_rows > 0){
+                $row = $uQuery->fetch_assoc();
+                // CHECK ELIGIBILITY TO LOGIN 
+                if($row['status']){
+                    
+                        if (password_verify($password, $row['password'])) {
+                        //    SET THE SESSIONS AND ECHO SUCCESS 
+                            $_SESSION['oUsername'] = $row['username'];
+                            $_SESSION['oEmail'] = $row['email'];
+                            $_SESSION['phone'] = $row['phone'];
+                            echo "Login Successfully";
+                        }else{
+                            echo error("Invalid Password");
+                        }
+                }else{
+                    echo error("Account Suspended Contact Admin for support");
+                }
+            }else{
+               echo error("Username does not exist");
+            }
+        }
+        
+
+
+    }
 
 
     // PLACE ORDER REQUEST

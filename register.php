@@ -1,11 +1,14 @@
 <?php
     require("./views/header.php");
+    if (isset($_SESSION['oUsername'])) {
+      header("Location: ./home.php");
+    }
 ?>
-
     <title>Register</title>
   </head>
   <body>
     <div class="form-container">
+     
       <h1>SignUp</h1>
       <form action="" class="signup" id="register">
         <input type="text" id="username" placeholder="Username" />

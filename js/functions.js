@@ -14,6 +14,9 @@ function success(x) {
 function info(x) {
   return `<div class='text-info'> ${x} </div>`;
 }
+function cleanPassword(x) {
+  return x.value.length;
+}
 
 let popupPage = _("popup-page");
 let popupClose = _("popup-close");
