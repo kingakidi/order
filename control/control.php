@@ -577,3 +577,10 @@
     }
  
     
+    // BEGINNING OF REQUEST 
+    if (isset($_POST['userOrderSentRequest'])) {
+        
+        print_r($_POST);
+        $user_id = $_SESSION['oId'];
+        $rQuery = $conn->query("SELECT * FROM request_table WHERE merchant_id=$user_id");
+    }
