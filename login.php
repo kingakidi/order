@@ -1,7 +1,7 @@
 <?php
     require("./views/header.php");
     if (isset($_SESSION['oUsername'])) {
-        header("Location: ./home.php");
+        header("Location: ./index.php");
       }
 ?>
     <title>Login</title>
@@ -13,12 +13,12 @@
         </div>
         <h1>Login</h1>
         <form action="" class="login" id="login">
-            <input type="text" id="username" placeholder="Enter Username" />
-            <input type="password" id="password" placeholder="Enter Password" />
+            <input type="text" class="order-input" id="username" placeholder="Enter Username" />
+            <input type="password" class="order-input" id="password" placeholder="Enter Password" />
             <div class="show" id="show">
 
             </div>
-            <input type="submit" value="Login" id="btn-login"/>
+            <input type="submit" class='btn btn-order' value="Login" id="btn-login"/>
 
             <div>
                 Don't have an account?

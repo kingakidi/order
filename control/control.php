@@ -101,7 +101,7 @@
                 <select
                     name='food-list'
                     id='food-list'
-                    class='form-control'
+                    class='order-input'
                     required
                 >
                     <option value='' disabled selected>Choose...</option>
@@ -115,7 +115,7 @@
                 <input
                     type='text'
                     placeholder='Customer Username'
-                    class='form-control order-input mb-0'
+                    class='order-input order-inputt mb-0'
                     id='customer-username'
                     required
                 />
@@ -125,7 +125,7 @@
                 <label for='amount' class='mt-3'>Amount</label>
                 <input
                     type='number'
-                    class='form-control'
+                    class='order-input'
                     id='amount'
                     placeholder='Amount'
                 />
@@ -134,7 +134,7 @@
             <div class='col-sm'>
                 <div class='form-group'>
                 <label for='order-type' class='mt-3'>Buying or Selling</label>
-                <select name='order-type' id='order-type' class='form-control'>
+                <select name='order-type' id='order-type' class='order-input'>
                     <option value='' selected disabled>Choose...</option>
     
                     <option value='selling'>Selling</option>
@@ -146,7 +146,7 @@
                 <input
                     type='number'
                     id='gram'
-                    class='form-control order-input'
+                    class='order-input order-inputt'
                     placeholder='Gram'
                 />
                 </div>
@@ -155,7 +155,7 @@
                 <input
                     type='number'
                     id='outcome'
-                    class='form-control'
+                    class='order-input'
                     placeholder='Outcome'
                 />
                 </div>
@@ -288,7 +288,7 @@
         $merchant_username =  ucwords($merchant['username']);
         $grams = $request['gram'];
         $amount = $request['amount'];
-        echo "<div class='single-request '> <p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr> Make payment to <br> Account Number: $account_number <br> Bank: $bank_name <br> Fullname: $fullname</p> 
+        echo "<div class='single-request '> <p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr> Make payment to <br> Account Number: $account_number <br> Bank: $bank_code <br> Fullname: $fullname</p> 
         <div id='show-status'></div>
         <div>
             <button id='btn-accept'> Accept </button>
@@ -386,13 +386,13 @@
         echo '<form class="userStatusForm" id="userStatusForm">
                 <div class="form-group">
                 <label for="password"> Password</label>
-                    <input type="password" class="form-control" placeholder="Password" id="password">
+                    <input type="password" class="order-input order-inputt" placeholder="Password" id="password">
                 </div>
-                <div class="error userStatusForm-error" id="userStatusForm-error">
+                <div class="userStatusForm-error text-light" id="userStatusForm-error">
                 </div>
                 <div class="form-group text-right" >
                     
-                    <button type="submit" class="btn btn-success" id="submit-userStatusForm">CHANGE STATUS</button>
+                    <button type="submit" class="btn order-input btn-order" id="submit-userStatusForm">CHANGE STATUS</button>
                 </div>
         </form>';
     }
@@ -452,7 +452,7 @@
     if (isset($_POST['userTypeForm'])) {
         echo '<form class="userTypeForm" id="userTypeForm">
         <div class="form-group">
-            <select  id="typeOption" class="form-control">
+            <select  id="typeOption" class="order-input">
                 <option value="" selected disabled>SELECT TYPE</option>
                 <option value="user">User</option>
                 <option value="editor">Editor</option>
@@ -461,17 +461,17 @@
             </select>
         </div>
         <div class="form-group">
-            <input type="password" class="form-control" id="password" placeholder="Password">
+            <input type="password" class="order-input" id="password" placeholder="Password">
         </div>
         <div class="userTypeForm-error error" id="userTypeForm-error"></div>
         <div class="form-group text-right">
-            <button  type="submit" id="sTFBtn" class="btn btn-success">CHANGE TYPE</button>
+            <button  type="submit" id="sTFBtn" class="btn btn-order order-input">CHANGE TYPE</button>
         </div>
         </form>';
     }
 
     if (isset($_POST['uUType'])) {
-        $userId =  $_SESSION['XBTbbNid'];
+        $userId =  $_SESSION['oId'];
         $id = clean($_POST['id']);
         $type  = clean(($_POST['type']));
         $password = $_POST['password'];
@@ -520,7 +520,7 @@
 
            echo "
              <div class='m-3'>
-            <input type='text' name='' id='email' value='$e' class='form-control' style='visibility:hidden' disabled>
+            <input type='text' name='' id='email' value='$e' class='order-input' style='visibility:hidden' disabled>
               
             <div class='form-group'>
                     <label class='label'> Action: <label>
@@ -528,7 +528,7 @@
               </div>
               
                 <div class='form-group'>               
-                  <select name='users-actions' id='user-actions' class='form-control order-input'>
+                  <select name='users-actions' id='user-actions' class='order-input order-inputt'>
                       <option value='' selected disabled>SELECT ACTION</option>
                       <option value='status'>CHANGE STATUS</option>
                       <option value='usertype'>CHANGE USERTYPE</option>

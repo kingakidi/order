@@ -202,7 +202,7 @@ nav div:last-child {
 
 .btn-order {
   background-color: rgb(255, 147, 59);
-  margin: 10px;
+
   display: block;
   width: 100%;
   color: #fff;
@@ -228,9 +228,14 @@ nav div:last-child {
 .order-input {
   display: block;
   margin-bottom: 10px;
-
+  width: 100%;
   padding: 10px;
   box-sizing: border-box;
+}
+
+.order-input:focus {
+  outline: 1px rgba(0, 0, 0, 0.39);
+  padding: 13px;
 }
 /* END ORDER SECTION  */
 /* MEDIA QUERIES */

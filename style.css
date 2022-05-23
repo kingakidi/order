@@ -62,7 +62,6 @@ select {
 }
 .btn-order {
   background-color: rgb(255, 147, 59);
-  margin: 10px;
   display: block;
   width: 100%;
   color: #fff;
@@ -207,31 +206,38 @@ select {
   padding: 20px;
   /* background-color: #eee; */
 }
-.signup input,
-.signup select,
-.login input,
-.add-resturant input {
+
+.signup select {
   display: block;
   margin-bottom: 10px;
-  width: 350px;
-
+  width: 100%;
   padding: 10px;
   box-sizing: border-box;
 }
 
-.signup input:focus,
-.signup select:focus,
-.login input:focus,
-.add-resturant input:focus {
+.signup select:focus {
   outline: 1px rgba(0, 0, 0, 0.39);
   padding: 13px;
 }
 
-.signup input[type="submit"],
+/* .signup input[type="submit"],
 .login input[type="submit"],
 .add-resturant input[type="submit"] {
   background: rgb(9, 238, 226);
   border: solid rgba(0, 0, 0, 0.39) 1px;
+} */
+
+.order-input {
+  display: block;
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.order-input:focus {
+  outline: 1px rgba(0, 0, 0, 0.39);
+  padding: 13px;
 }
 
 /* HOME COMPONENT STYLING  */

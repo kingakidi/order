@@ -123,6 +123,7 @@ transactionTable.addEventListener("click", () => {
     // PENDING ORDERS
 
     let btnPendingOrders = document.getElementsByName("btn-pending-orders");
+
     btnPendingOrders.forEach((el) => {
       el.addEventListener("click", () => {
         let orderId = el.getAttribute("data-order-id");
@@ -149,8 +150,6 @@ transactionTable.addEventListener("click", () => {
           let decline = _("btn-decline");
           let showStatus = _("show-status");
           accept.addEventListener("click", () => {
-            // console.log(orderId);
-
             $.ajax({
               url: url,
               method: "POST",
@@ -237,7 +236,6 @@ btnUsers.addEventListener("click", () => {
           success(data) {
             showPopupContent.innerHTML = data;
             popupPage.style.display = "block";
-            console.log(data);
           },
         }).done(function () {
           popupClose.addEventListener("click", () => {
@@ -267,7 +265,8 @@ btnUsers.addEventListener("click", () => {
                   event.preventDefault();
                   if (clean(password) < 1) {
                     uSFE.innerHTML = "PASSWORD IS REQUIRED";
-                    uSFE.style.visibility = "visible";
+
+                    // uSFE.style.visibility = "visible";
                   } else {
                     // SEND QUERY TO DATABASE
                     $.ajax({

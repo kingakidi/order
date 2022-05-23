@@ -1,7 +1,7 @@
 <?php
     require("./views/header.php");
     if (isset($_SESSION['oUsername'])) {
-      header("Location: ./home.php");
+      header("Location: ./index.php");
     }
 ?>
     <title>Register</title>
@@ -11,17 +11,17 @@
      
       <h1>SignUp</h1>
       <form action="" class="signup" id="register">
-        <input type="text" id="username" placeholder="Username" />
+        <input type="text" class='order-input' id="username" placeholder="Username" />
         <div id='check-username'></div>
-        <input type="text" id="fullname" placeholder="Fullname" />
-        <input type="email" id="email" placeholder="Email Address" />
+        <input type="text" class="order-input" id="fullname" placeholder="Fullname" />
+        <input type="email" class="order-input" id="email" placeholder="Email Address" />
         <input
           id="phone"
-          type="number"
+          type="number" class="order-input"
           name="phone"
           placeholder="Enter phone number"
         />
-        <select name="bank" id="bank" class="bank">
+        <select class="input-order" name="bank" id="bank" >
           <option value="">Select Banks</option>
             <?php $curl = curl_init();
                   curl_setopt_array($curl, array(
@@ -53,13 +53,14 @@
         <input
           type="number"
           name="bank-account"
-          id="bank-account"
+          id="bank-account" class="order-input"
           placeholder="Bank Account Number"
+
         />
         
-        <input type="password" id="password" placeholder="Enter Password" />
+        <input type="password" class="order-input" id="password" placeholder="Enter Password" />
         <div id="show"></div>
-        <input type="submit" id="btn-register" value="Register" />
+        <input type="submit" class="btn btn-order" id="btn-register" value="Register" />
 
         <div>
           Already have an account?
