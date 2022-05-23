@@ -242,6 +242,15 @@ nav div:last-child {
   outline: 1px rgba(0, 0, 0, 0.39);
   padding: 13px;
 }
+.card i {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.card span {
+  text-transform: uppercase;
+  font-weight: bold;
+}
 /* END ORDER SECTION  */
 /* MEDIA QUERIES */
 

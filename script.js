@@ -451,6 +451,34 @@ request.forEach((el) => {
           showItems.innerHTML = data;
         },
       });
+    } else if (id === "pending-request") {
+      $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+          userOrderPendingRequest: true,
+        },
+        beforeSend() {
+          showItems.innerHTML = "Loading your send request";
+        },
+        success(data) {
+          showItems.innerHTML = data;
+        },
+      });
+    } else if (id === "decline-request") {
+      $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+          userOrderDeclineRequest: true,
+        },
+        beforeSend() {
+          showItems.innerHTML = "Loading your send request";
+        },
+        success(data) {
+          showItems.innerHTML = data;
+        },
+      });
     }
   });
 });

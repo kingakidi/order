@@ -19,6 +19,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="dashboard.css" />
   </head>
@@ -39,10 +40,10 @@
             >
           </section>
           <section class="cards">
-            <div class="card " name="request" id="send-request">Send Request</div>
-            <div class="card completed" name="request" id="completed-request">Completed Request</div>
-            <div class="card pending" name="request" id="pending-request">Pending Request</div>
-            <div class="card" name="request" id="all-request">All Send Request</div>
+            <div class="card " name="request" id="send-request"><i class="bi bi-cloud-upload"></i> <span>Send</span> </div>
+            <div class="card completed" name="request" id="completed-request"><i class="bi bi-check2-square"></i> <span> Completed </span></div>
+            <div class="card pending" name="request" id="pending-request"> <i class="bi bi-clipboard-check"></i> <span>Pending</span> </div>
+            <div class="card" name="request" id="decline-request"><i class="bi bi-cart-x"></i> <span>Decline</span> </div>
           </section>
           <section class="show-actions" id="show-actions">
             <h2 class="text-center">Select any of the above button to perfom action here</h2>
