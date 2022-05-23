@@ -175,49 +175,49 @@
     if (isset($_POST['getTransactionTable'])) {
         $username = $_SESSION['oUsername'];
         echo " <div class='order-list'>
-      <h3>Transaction List</h3>
-       <div class='list-container'>";
-       
-          $myOrdersQuery = $conn->query("SELECT * FROM request_table WHERE customer_username='$username' ORDER BY request_table.id DESC");
-          if (!$myOrdersQuery) {
-           die($conn->error);
-          }else{
-            if ($myOrdersQuery->num_rows > 0 ) {
-           
-              
-            $sn = 1;
-            while ($row = $myOrdersQuery->fetch_assoc()) {
-              extract($row);
-              $merchant = merchantDetailsById($merchant_id);
-              $merchant_username =  ucwords($merchant['username']);
-              
-              echo "<ol class='single-list $status'>
-              <li> $sn </li>
-              <li> $merchant_username is sending you $outcome $food_name </li>";
-
-              if ($status === 'pending') {
-                echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-order-id=$id name='btn-pending-orders'> Click here to view and Accept </button></li>
-             ";
-              }else if($status === 'completed'){
-                echo "<li><button class='btn-order-completed' disabled> Completed </button></li>
-                ";
-              }else if($status === 'declined'){
-                echo "<li><button class='btn-order-declined' disabled> Declined </button></li>
-                ";
-              }
-              echo '</ol>';
-              $sn++;
-            }
-           
+        <h3>Transaction List</h3>
+        <div class='list-container'>";
+        
+            $myOrdersQuery = $conn->query("SELECT * FROM request_table WHERE customer_username='$username' ORDER BY request_table.id DESC");
+            if (!$myOrdersQuery) {
+            die($conn->error);
             }else{
-              echo '<h3> You have no order at the moment </h3>';
+                if ($myOrdersQuery->num_rows > 0 ) {
+            
+                
+                $sn = 1;
+                while ($row = $myOrdersQuery->fetch_assoc()) {
+                extract($row);
+                $merchant = merchantDetailsById($merchant_id);
+                $merchant_username =  ucwords($merchant['username']);
+                
+                echo "<ol class='single-list $status'>
+                <li> $sn </li>
+                <li> $merchant_username is sending you $outcome $food_name </li>";
+
+                if ($status === 'pending') {
+                    echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-order-id=$id name='btn-pending-orders'> Click here to view and Accept </button></li>
+                ";
+                }else if($status === 'completed'){
+                    echo "<li><button class='btn-order-completed' disabled> Completed </button></li>
+                    ";
+                }else if($status === 'declined'){
+                    echo "<li><button class='btn-order-declined' disabled> Declined </button></li>
+                    ";
+                }
+                echo '</ol>';
+                $sn++;
+                }
+            
+                }else{
+                echo '<h3> You have no order at the moment </h3>';
+                }
+                
             }
             
-          }
         
-     
-        echo "</div>
-    </div>";
+            echo "</div>
+        </div>";
     }
 
 
@@ -580,7 +580,147 @@
     // BEGINNING OF REQUEST 
     if (isset($_POST['userOrderSentRequest'])) {
         
-        print_r($_POST);
         $user_id = $_SESSION['oId'];
-        $rQuery = $conn->query("SELECT * FROM request_table WHERE merchant_id=$user_id");
+        
+        echo " <div class='order-list'>
+        <h3>Send Request List</h3>
+        <div class='list-container'>";
+        
+            $myOrdersQuery = $conn->query("SELECT * FROM request_table WHERE merchant_id=$user_id ORDER BY request_table.id DESC");
+            if (!$myOrdersQuery) {
+            die($conn->error);
+            }else{
+                if ($myOrdersQuery->num_rows > 0 ) {
+            
+                    $sn = 1;
+                    while ($row = $myOrdersQuery->fetch_assoc()) {
+                    extract($row);
+                    $merchant = merchantDetailsById($merchant_id);
+                    $merchant_username =  ucwords($merchant['username']);
+                    
+                    echo "<ol class='single-list $status'>
+                    <li> $sn </li>
+                    <li> you are sending $customer_username $outcome $food_name </li>";
+
+                    if ($status === 'pending') {
+                        echo "<li><button class='btn-order-pending' disabled> Pending </button></li>";
+                    }else if($status === 'completed'){
+                       
+                        echo "<li><button class='btn-order-completed' data-merchant-id=$merchant_id data-order-id=$id name='btn-pending-orders'> Accepted </button></li>";
+                    }else if($status === 'declined'){
+                        echo "<li><button class='btn-order-declined' disabled> Declined </button></li>
+                        ";
+                    }
+                    echo '</ol>';
+                    $sn++;
+                    }
+            
+                }else{
+                    echo "<h2> You have not send any request! </h2>";
+                }
+                
+            }
+            
+        
+            echo "</div>
+        </div>";
+    }
+
+
+    // COMPLETED REQUEST 
+    if (isset($_POST['userOrderCompletedRequest'])) {
+        
+        $user_id = $_SESSION['oId'];
+        
+        echo " <div class='order-list'>
+        <h3>Send Request List</h3>
+        <div class='list-container'>";
+        
+            $myOrdersQuery = $conn->query("SELECT * FROM request_table WHERE merchant_id=$user_id AND request_table.status = 'completed' ORDER BY request_table.id DESC");
+            if (!$myOrdersQuery) {
+            die($conn->error);
+            }else{
+                if ($myOrdersQuery->num_rows > 0 ) {
+            
+                    $sn = 1;
+                    while ($row = $myOrdersQuery->fetch_assoc()) {
+                    extract($row);
+                    $merchant = merchantDetailsById($merchant_id);
+                    $merchant_username =  ucwords($merchant['username']);
+                    
+                    echo "<ol class='single-list $status'>
+                    <li> $sn </li>
+                    <li> you are sending $customer_username $outcome $food_name </li>";
+
+                    if ($status === 'pending') {
+                        echo "<li><button class='btn-order-pending' disabled> Pending </button></li>";
+                    }else if($status === 'completed'){
+                       
+                        echo "<li><button class='btn-order-completed' data-merchant-id=$merchant_id data-order-id=$id name='btn-pending-orders'> Accepted </button></li>";
+                    }else if($status === 'declined'){
+                        echo "<li><button class='btn-order-declined' disabled> Declined </button></li>
+                        ";
+                    }
+                    echo '</ol>';
+                    $sn++;
+                    }
+            
+                }else{
+                    echo "<h2> You don't have any completed request at the moment </h2>";
+                }
+                
+            }
+            
+        
+            echo "</div>
+        </div>";
+    }
+
+    // PENDING REQUEST 
+    if (isset($_POST['userOrderPendingRequest'])) {
+        
+        $user_id = $_SESSION['oId'];
+        
+        echo " <div class='order-list'>
+        <h3>Send Request List</h3>
+        <div class='list-container'>";
+        
+            $myOrdersQuery = $conn->query("SELECT * FROM request_table WHERE merchant_id=$user_id AND request_table.status = 'pending' ORDER BY request_table.id DESC");
+            if (!$myOrdersQuery) {
+            die($conn->error);
+            }else{
+                if ($myOrdersQuery->num_rows > 0 ) {
+            
+                    $sn = 1;
+                    while ($row = $myOrdersQuery->fetch_assoc()) {
+                    extract($row);
+                    $merchant = merchantDetailsById($merchant_id);
+                    $merchant_username =  ucwords($merchant['username']);
+                    
+                    echo "<ol class='single-list $status'>
+                    <li> $sn </li>
+                    <li> you are sending $customer_username $outcome $food_name </li>";
+
+                    if ($status === 'pending') {
+                        echo "<li><button class='btn-order-pending' disabled> Pending </button></li>";
+                    }else if($status === 'completed'){
+                       
+                        echo "<li><button class='btn-order-completed' data-merchant-id=$merchant_id data-order-id=$id name='btn-pending-orders'> Accepted </button></li>";
+                    }else if($status === 'declined'){
+                        echo "<li><button class='btn-order-declined' disabled> Declined </button></li>
+                        ";
+                    }
+                    echo '</ol>';
+                    $sn++;
+                    }
+            
+                }else{
+                    echo "<h2> You don't have any pending request at the moment </h2>";
+                }
+                
+            }
+            
+        
+            echo "</div>
+        </div>";
     }

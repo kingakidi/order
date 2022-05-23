@@ -437,6 +437,20 @@ request.forEach((el) => {
           showItems.innerHTML = data;
         },
       });
+    } else if (id === "completed-request") {
+      $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+          userOrderCompletedRequest: true,
+        },
+        beforeSend() {
+          showItems.innerHTML = "Loading your send request";
+        },
+        success(data) {
+          showItems.innerHTML = data;
+        },
+      });
     }
   });
 });

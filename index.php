@@ -39,9 +39,9 @@
             >
           </section>
           <section class="cards">
-            <div class="card" name="request" id="send-request">Send Request</div>
-            <div class="card" name="request" id="completed-request">Completed Request</div>
-            <div class="card" name="request" id="pending-request">Pending Request</div>
+            <div class="card " name="request" id="send-request">Send Request</div>
+            <div class="card completed" name="request" id="completed-request">Completed Request</div>
+            <div class="card pending" name="request" id="pending-request">Pending Request</div>
             <div class="card" name="request" id="all-request">All Send Request</div>
           </section>
           <section class="show-actions" id="show-actions">

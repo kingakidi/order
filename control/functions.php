@@ -38,6 +38,16 @@
         }
     }
 
+    function merchantDetailsByUsername($username){
+        global $conn; 
+        $uQuery = $conn->query("SELECT * FROM users WHERE users.username = $username");
+        if (!$uQuery) {
+         return die($conn->error);
+        }else{
+          return $uQuery->fetch_assoc();
+        }
+    }
+
     
     
     function getRequestDetailsById($id){
