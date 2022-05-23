@@ -94,6 +94,11 @@ nav div:last-child {
   align-items: center;
 }
 
+.list-container {
+  width: 100%;
+  padding: 10px;
+  /* overflow-x: scroll; */
+}
 .single-list {
   list-style: none;
   display: flex;
@@ -124,17 +129,6 @@ nav div:last-child {
   color: #fff;
 }
 
-.list-container {
-  background-color: red;
-  width: 100%;
-  overflow: scroll;
-}
-
-.list-container ol {
-  width: 100%;
-  overflow: hidden;
-  overflow-x: scroll;
-}
 /* POPUP STYLING  */
 .popup-page {
   position: fixed;

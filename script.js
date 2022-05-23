@@ -417,3 +417,26 @@ btnUsers.addEventListener("click", () => {
     });
   });
 });
+
+// REQUEST
+let request = document.getElementsByName("request");
+request.forEach((el) => {
+  el.addEventListener("click", () => {
+    let id = el.id;
+    if (id === "send-request") {
+      $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+          userOrderSentRequest: true,
+        },
+        beforeSend() {
+          showItems.innerHTML = "Loading your send request";
+        },
+        success(data) {
+          showItems.innerHTML = data;
+        },
+      });
+    }
+  });
+});

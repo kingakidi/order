@@ -190,6 +190,7 @@
               extract($row);
               $merchant = merchantDetailsById($merchant_id);
               $merchant_username =  ucwords($merchant['username']);
+              
               echo "<ol class='single-list $status'>
               <li> $sn </li>
               <li> $merchant_username is sending you $outcome $food_name </li>";
@@ -258,7 +259,7 @@
         $orderType = clean($orderType);
         $gram = clean($gram);
         $outcome = clean($outcome);
-
+        $user_id = $_SESSION['oId'];
         if (!empty($foodList) && !empty($customerUsername) && !empty($amount) && !empty($orderType) && !empty($gram) && !empty($outcome)) {
             // VALIDITY OF USERNAME 
 
@@ -283,30 +284,25 @@
         }
     }
 
-    function bankNameFromCode($code)
-    {
-       
-    }
+
     if (isset($_POST['getMerchantPaymentDetails'])) {
         extract($_POST);
-        print_r($_POST);
         $merchantId = $getMerchantPaymentDetails;
         $merchant = merchantDetailsById($merchantId);
         $request = getRequestDetailsById($orderId);
-        print_r($merchant);
         extract($merchant);
         extract($request);
        
         $merchant_username =  ucwords($merchant['username']);
         $grams = $request['gram'];
         $amount = $request['amount'];
-        // echo "<div class='single-request '> <p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr> Make payment to <br> Account Number: $account_number <br> Bank: $bank_code <br> Fullname: $fullname</p> 
-        // <div id='show-status'></div>
-        // <div>
-        //     <button id='btn-accept'> Accept </button>
-        //     <button id='btn-decline'> Decline </button>
-        // </div> 
-        // </div>";
+        echo "<div class='single-request '> <p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr> Make payment to <br> Account Number: $account_number <br> Bank: $bank_code <br> Fullname: $fullname</p> 
+        <div id='show-status'></div>
+        <div>
+            <button id='btn-accept'> Accept </button>
+            <button id='btn-decline'> Decline </button>
+        </div> 
+        </div>";
     }
 
     // ACCEPT ORDER  

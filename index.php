@@ -33,15 +33,16 @@
       <div class="dashboard-container">
         <main class="dashboard-main">
           <section class="action">
-            <button class="btn-action" id="transaction-table">Payments</button
+              <button class="btn-action" id="place-order">Send Food</button>
+            <button class="btn-action" id="transaction-table">Transactions</button
             ><button class="btn-action" name="btn-users" id="btn-users">Users</button
-            ><button class="btn-action" id="place-order">Foods</button>
+            >
           </section>
           <section class="cards">
-            <div class="card">Food</div>
-            <div class="card">Transactions</div>
-            <div class="card">All Transactions</div>
-            <div class="card">Users</div>
+            <div class="card" name="request" id="send-request">Send Request</div>
+            <div class="card" name="request" id="completed-request">Completed Request</div>
+            <div class="card" name="request" id="pending-request">Pending Request</div>
+            <div class="card" name="request" id="all-request">All Send Request</div>
           </section>
           <section class="show-actions" id="show-actions">
             <h2 class="text-center">Select any of the above button to perfom action here</h2>
