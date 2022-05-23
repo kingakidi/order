@@ -1,8 +1,9 @@
 <?php
   include "./control/functions.php";
-     if (!$_SESSION['oUsername']) {
-        header("Location: ./login.php");
-    }
+  if (!isset($_SESSION['oUsername'])) {
+      
+    header("Location: ./login.php");
+  }
 
     ?>
 

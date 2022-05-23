@@ -173,6 +173,7 @@
 
     // TRANSCACTION TABLE REQUEST 
     if (isset($_POST['getTransactionTable'])) {
+        $username = $_SESSION['oUsername'];
         echo " <div class='order-list'>
       <h3>Transaction List</h3>
        <div class='list-container'>";
@@ -260,41 +261,52 @@
 
         if (!empty($foodList) && !empty($customerUsername) && !empty($amount) && !empty($orderType) && !empty($gram) && !empty($outcome)) {
             // VALIDITY OF USERNAME 
-            if (verifyUsername($customerUsername)) {
-              $addOrderQuery = $conn->query("INSERT INTO `request_table`(food_name, customer_username, merchant_id, amount, order_type, gram, outcome, status) VALUES ('$foodList', '$customerUsername', $user_id, $amount, '$orderType', $gram, $outcome, 'pending' )");
 
-              if (!$addOrderQuery) {
-                  die(error($conn->error));
-              }else{
-                  echo success("Order Placed Successfully");
-              }
+            if ($_SESSION['oUsername'] === $customerUsername) {
+                echo error("You can't send item to yourself");
             }else{
-                echo error("Invalid Username");
+                if (verifyUsername($customerUsername)) {
+                    $addOrderQuery = $conn->query("INSERT INTO `request_table`(food_name, customer_username, merchant_id, amount, order_type, gram, outcome, status) VALUES ('$foodList', '$customerUsername', $user_id, $amount, '$orderType', $gram, $outcome, 'pending' )");
+      
+                    if (!$addOrderQuery) {
+                        die(error($conn->error));
+                    }else{
+                        echo success("Order Placed Successfully");
+                    }
+                  }else{
+                      echo error("Invalid Username");
+                  }
             }
+           
         }else{
             echo error("All fields required");
         }
     }
 
-
+    function bankNameFromCode($code)
+    {
+       
+    }
     if (isset($_POST['getMerchantPaymentDetails'])) {
         extract($_POST);
+        print_r($_POST);
         $merchantId = $getMerchantPaymentDetails;
         $merchant = merchantDetailsById($merchantId);
         $request = getRequestDetailsById($orderId);
+        print_r($merchant);
         extract($merchant);
         extract($request);
        
         $merchant_username =  ucwords($merchant['username']);
         $grams = $request['gram'];
         $amount = $request['amount'];
-        echo "<div class='single-request '> <p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr> Make payment to <br> Account Number: $account_number <br> Bank: $bank_code <br> Fullname: $fullname</p> 
-        <div id='show-status'></div>
-        <div>
-            <button id='btn-accept'> Accept </button>
-            <button id='btn-decline'> Decline </button>
-        </div> 
-        </div>";
+        // echo "<div class='single-request '> <p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr> Make payment to <br> Account Number: $account_number <br> Bank: $bank_code <br> Fullname: $fullname</p> 
+        // <div id='show-status'></div>
+        // <div>
+        //     <button id='btn-accept'> Accept </button>
+        //     <button id='btn-decline'> Decline </button>
+        // </div> 
+        // </div>";
     }
 
     // ACCEPT ORDER  

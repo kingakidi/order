@@ -192,6 +192,13 @@ select {
   padding: 15px 62px;
 }
 
+.login-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 /* FROM RESTO  */
 .form-container {
   display: flex;

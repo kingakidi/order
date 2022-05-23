@@ -46,7 +46,7 @@
                   foreach ($res['data'] as $banksArray) {
                   $bankName = $banksArray['name'];
                   $bankCode = $banksArray['code'];
-                      echo "<option data-bank-name='$bankName' value='$bankCode'> $bankName </option>";
+                      echo "<option data-bank-name='$bankName' value='$bankName'> $bankName </option>";
                   }
             ?>
         </select>

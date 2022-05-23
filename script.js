@@ -13,6 +13,9 @@ orderBtn.addEventListener("click", () => {
     data: {
       getPlaceOrderForm: true,
     },
+    beforeSend() {
+      showItems.innerHTML = "Loading Order Form...";
+    },
     success(data) {
       showItems.innerHTML = data;
     },
@@ -116,6 +119,9 @@ transactionTable.addEventListener("click", () => {
     data: {
       getTransactionTable: true,
     },
+    beforeSend() {
+      showItems.innerHTML = "Loading Transactions ....";
+    },
     success(data) {
       showItems.innerHTML = data;
     },
@@ -215,7 +221,7 @@ btnUsers.addEventListener("click", () => {
       getAllUsers: true,
     },
     beforeSend() {
-      // show animation for loading
+      showItems.innerHTML = "Loading Users ....";
     },
     success(data) {
       showItems.innerHTML = data;
