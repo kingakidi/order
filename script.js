@@ -4,6 +4,7 @@
 let orderBtn = _("place-order");
 let showItems = _("show-actions");
 let transactionTable = _("transaction-table");
+let btnUsers = _("btn-users");
 orderBtn.addEventListener("click", () => {
   // GET PLACE OTHER FORM
   $.ajax({
@@ -169,7 +170,7 @@ transactionTable.addEventListener("click", () => {
                 } else {
                   showStatus.innerHTML = data;
                 }
-                console.log(data);
+                // console.log(data);
               },
             });
           });
@@ -194,7 +195,7 @@ transactionTable.addEventListener("click", () => {
                 } else {
                   showStatus.innerHTML = data;
                 }
-                console.log(data);
+                // console.log(data);
               },
             });
           });
@@ -203,6 +204,211 @@ transactionTable.addEventListener("click", () => {
           popupPage.style.display = "none";
         });
       });
+    });
+  });
+});
+
+btnUsers.addEventListener("click", () => {
+  $.ajax({
+    url: url,
+    method: "POST",
+    data: {
+      getAllUsers: true,
+    },
+    beforeSend() {
+      // show animation for loading
+    },
+    success(data) {
+      showItems.innerHTML = data;
+    },
+  }).done(() => {
+    let viewuser = document.getElementsByName("viewuser");
+    viewuser.forEach(function (el) {
+      el.onclick = function (event) {
+        event.preventDefault();
+        let id = el.id;
+        $.ajax({
+          method: "POST",
+          url: url,
+          data: {
+            fetchSingleUser: true,
+            userid: id,
+          },
+          success(data) {
+            showPopupContent.innerHTML = data;
+            popupPage.style.display = "block";
+            console.log(data);
+          },
+        }).done(function () {
+          popupClose.addEventListener("click", () => {
+            popupPage.style.display = "none";
+          });
+          let showAction = _("show-popup-actions");
+          let userAction = _("user-actions");
+          userAction.onchange = function () {
+            showAction.innerHTML = `${loadIcon}`;
+            if (userAction.value.trim().toLowerCase() === "status") {
+              $.ajax({
+                url: url,
+                method: "POST",
+                data: { userStatusForm: "userStatusForm", userId: id },
+                beforeSend: function () {
+                  showAction.innerHTML = `${loadIcon}`;
+                },
+                success: function (data) {
+                  showAction.innerHTML = data;
+                },
+              }).done(function () {
+                let submitUserStaus = _("submit-userStatusForm");
+                let userStatusForm = _("userStatusForm");
+                let password = _("password");
+                let uSFE = _("userStatusForm-error");
+                userStatusForm.onsubmit = function (event) {
+                  event.preventDefault();
+                  if (clean(password) < 1) {
+                    uSFE.innerHTML = "PASSWORD IS REQUIRED";
+                    uSFE.style.visibility = "visible";
+                  } else {
+                    // SEND QUERY TO DATABASE
+                    $.ajax({
+                      url: url,
+                      method: "POST",
+                      data: {
+                        userStatusUpdate: "userStatusUpdate",
+                        password: password.value,
+                        id: id,
+                      },
+                      beforeSend: function () {
+                        uSFE.innerHTML = `${loadIcon}`;
+                        uSFE.style.visibility = "visible";
+                        submitUserStaus.disabled = true;
+                        submitUserStaus.innerHTML = `${loadIcon} Sending`;
+                      },
+                      success: function (data) {
+                        submitUserStaus.disabled = false;
+                        submitUserStaus.innerHTML = `Change Status`;
+                        if (
+                          data.trim() ===
+                          '<span class="text-success">STATUS CHANGED SUCCESSFULLY</span>'
+                        ) {
+                          uSFE.innerHTML = data;
+                          uSFE.style.visibility = "visible";
+                          userStatusForm.reset();
+                        } else {
+                          uSFE.innerHTML = data;
+                          uSFE.style.visibility = "visible";
+                        }
+                      },
+                    });
+                    // $.post(
+                    //   "./control/action.php",
+                    //   {
+                    //     userStatusUpdate: "userStatusUpdate",
+                    //     password: password.value,
+                    //     id: id,
+                    //   },
+                    //   function (data) {
+                    //     if (
+                    //       data.trim() ===
+                    //       '<span class="text-success">STATUS CHANGED SUCCESSFULLY</span>'
+                    //     ) {
+                    //       uSFE.innerHTML = data;
+                    //       uSFE.style.visibility = "visible";
+                    //       userStatusForm.reset();
+                    //     } else {
+                    //       uSFE.innerHTML = data;
+                    //       uSFE.style.visibility = "visible";
+                    //     }
+                    //   }
+                    // );
+                  }
+                };
+              });
+            } else if (userAction.value.trim().toLowerCase() === "usertype") {
+              $.ajax({
+                url: url,
+                method: "POST",
+                data: { userTypeForm: "userTypeForm" },
+                beforeSend: function () {
+                  showAction.innerHTML = `${loadIcon}`;
+                },
+                success: function (data) {
+                  showAction.innerHTML = data;
+                },
+              }).done(function () {
+                let uTFE = _("userTypeForm-error");
+                let uTF = _("userTypeForm");
+                let sUTF = _("sTFBtn");
+                let password = _("password");
+                let type = _("typeOption");
+                _("userTypeForm").onsubmit = function (event) {
+                  event.preventDefault();
+                  if (clean(password) < 1 || clean(type) < 1) {
+                    uTFE.innerHTML =
+                      "<span class='text-danger'>ALL FIELD REQUIRED</span>";
+                    uTFE.style.visibility = "visible";
+                  } else {
+                    // SEND AJAX REQUEST
+                    $.ajax({
+                      url: url,
+                      method: "POST",
+                      data: {
+                        uUType: "Change User type",
+                        password: password.value,
+                        type: type.value,
+                        id: id,
+                      },
+                      beforeSend: function () {
+                        uTFE.innerHTML = `${loadIcon}`;
+                        uTFE.style.visibility = "visible";
+                        sUTF.disabled = true;
+                        sUTF.innerHTML = `${loadIcon} Sending`;
+                      },
+                      success: function (data) {
+                        sUTF.disabled = false;
+                        sUTF.innerHTML = `CHANGE TYPE`;
+                        if (
+                          data.trim() ===
+                          "<span class='text-success'>USER TYPE CHANGE SUCCESSFULLY</span>"
+                        ) {
+                          uTFE.innerHTML = data;
+                          uTFE.style.visibility = "visible";
+                          _("userTypeForm").reset();
+                        } else {
+                          uTFE.innerHTML = data;
+                          uTFE.style.visibility = "visible";
+                        }
+                      },
+                    });
+                    $.post(
+                      "./control/action.php",
+                      {
+                        uUType: "Change User type",
+                        password: password.value,
+                        type: type.value,
+                        id: id,
+                      },
+                      function (data) {
+                        if (
+                          data.trim() ===
+                          "<span class='text-success'>USER TYPE CHANGE SUCCESSFULLY</span>"
+                        ) {
+                          uTFE.innerHTML = data;
+                          uTFE.style.visibility = "visible";
+                          _("userTypeForm").reset();
+                        } else {
+                          uTFE.innerHTML = data;
+                          uTFE.style.visibility = "visible";
+                        }
+                      }
+                    );
+                  }
+                };
+              });
+            }
+          };
+        });
+      };
     });
   });
 });

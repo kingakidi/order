@@ -29,6 +29,6 @@
       </div>
     </div>
    <script src="./js/functions.js"></script>
-    <script src="./script.js"></script>
+    <script src="./script copy.js"></script>
   </body>
 </html>

@@ -71,6 +71,7 @@
 
                             $_SESSION['oEmail'] = $row['email'];
                             $_SESSION['phone'] = $row['phone'];
+                            $_SESSION['oUserType'] = $row['user_type'];
                             echo "Login Successfully";
                         }else{
                             echo error("Invalid Password");
@@ -219,9 +220,6 @@
 
 
 
-
-
-
     if (isset($_POST['verifyUsernameExist'])) {
         extract($_POST);
         $username = clean($username);
@@ -325,4 +323,249 @@
         }else{
             echo "Order Declined";
         }
-     }
+    }
+
+
+    // GET ALL USERNAME
+    if (isset($_POST['getAllUsers'])) {
+        // CHECK IF USERTYPE IS ADMIN 
+        if ($_SESSION['oUserType'] === 'admin') {
+            $query = $conn->query("SELECT * FROM users ORDER BY users.id DESC"); 
+
+            if (!$query) {
+                die($conn->error);
+            }else{
+                echo '<div class="list-container"> 
+                    <ol class="single-list" id="userTable">
+                    
+                        <li>S/N</li>
+                        <li>EMAIL</li>
+                        <li>PHONE</li>
+                        <li>USER TYPE</li>
+                        <li>STATUS</li>
+                        
+                    </ol>';
+                                        
+                    $sn = 0;
+                    while ($row = mysqli_fetch_assoc($query)) {
+
+                        $sn++;
+                        $id = $row['id'];
+                        $e = $row['email'];
+                        $p = $row['phone'];
+                        $s = $row['status'];
+                        $time = $row['created_at'];
+                        $usertype = ucwords($row['user_type']);
+                        echo "<ol class='single-list'>
+                            <li>$sn</li>
+                            <li><a href='?view=$e&userid=$id' class='users-link' id='$id' name='viewuser'> $e </a></li>
+                            <li>$p</li>
+                            <li>$usertype</li>
+                        
+                            <li>";
+
+                            if ($s === '1') {
+                                echo "Active";
+                            } else{
+                                echo "Deactivated";
+                            }
+                    echo "</li>                       
+                        </ol>";
+                    }
+                
+            }
+        } else{
+            echo error("Invalid Access");
+        }
+    }
+    
+    // USER STATUS FORM 
+    // CHANGE USER STATUS 
+    if (isset($_POST['userStatusForm'])) {
+        $userId = $_POST['userId'];
+        echo '<form class="userStatusForm" id="userStatusForm">
+                <div class="form-group">
+                <label for="password"> Password</label>
+                    <input type="password" class="form-control" placeholder="Password" id="password">
+                </div>
+                <div class="error userStatusForm-error" id="userStatusForm-error">
+                </div>
+                <div class="form-group text-right" >
+                    
+                    <button type="submit" class="btn btn-success" id="submit-userStatusForm">CHANGE STATUS</button>
+                </div>
+        </form>';
+    }
+
+    // USER STATUS UPDATE 
+    if (isset($_POST['userStatusUpdate'])) {
+        $statusUserId = clean($_POST['id']);
+        $password = $_POST['password'];
+        // CHECK IF THE PASSWORD IS CORRECT 
+            if ($password !== "") {
+                
+                $pQuery = mysqli_query($conn, "SELECT * FROM users WHERE id='$id'");
+                if (!$pQuery) {
+                    die("PASSWORD VERIFICATION FIALED ".mysqli_error($conn));
+                }else {
+                    $dbPassword = mysqli_fetch_assoc($pQuery)['password'];
+                    
+                    if (password_verify($password, $dbPassword)) {
+                        
+                        $uSQ = mysqli_query($conn, "SELECT * FROM users WHERE id=$statusUserId");
+                        if (!$uSQ) {
+                            die("UNABLE TO FETCH USER DETAILS ".mysqli_error($conn));
+                        }else{
+    
+                            
+                            $status = mysqli_fetch_assoc($uSQ)['status'];
+                            if ($status === '1') {
+                                $cSQuery = mysqli_query($conn, "UPDATE users SET status=0 WHERE id=$statusUserId");
+                                if (!$cSQuery) {
+                                    die("FAILED TO UPDATE USERS STATUS ".mysqli_error($conn));
+                                }else{
+                                    echo '<span class="text-success">STATUS CHANGED SUCCESSFULLY</span>';
+                                }
+                                
+                            }else{
+                                $cSQuery = mysqli_query($conn, "UPDATE users SET status=1 WHERE id=$statusUserId");
+                                if (!$cSQuery) {
+                                    die("FAILED TO UPDATE USERS STATUS ".mysqli_error($conn));
+                                }else{
+                                    echo '<span class="text-success">STATUS CHANGED SUCCESSFULLY</span>';
+                                }
+                            }
+                        }
+                // TOGGLE THE STATUS 
+                        
+                    }else{
+                        echo '<span class="text-danger">INVALID PASSWORD</span>';
+    
+                    }
+                }
+            }else{
+                echo '<span class="text-danger">PASSWORD IS REQUIRED</span>';
+            }
+    
+    }
+    
+    if (isset($_POST['userTypeForm'])) {
+        echo '<form class="userTypeForm" id="userTypeForm">
+        <div class="form-group">
+            <select  id="typeOption" class="form-control">
+                <option value="" selected disabled>SELECT TYPE</option>
+                <option value="user">User</option>
+                <option value="editor">Editor</option>
+                <option value="admin">Admin</option>
+                <option value="Super Admin"> Super Admin </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="password" placeholder="Password">
+        </div>
+        <div class="userTypeForm-error error" id="userTypeForm-error"></div>
+        <div class="form-group text-right">
+            <button  type="submit" id="sTFBtn" class="btn btn-success">CHANGE TYPE</button>
+        </div>
+        </form>';
+    }
+
+    if (isset($_POST['uUType'])) {
+        $userId =  $_SESSION['XBTbbNid'];
+        $id = clean($_POST['id']);
+        $type  = clean(($_POST['type']));
+        $password = $_POST['password'];
+        // CHECK FOR EMPTY FIELD 
+        if ($type !=="" AND $password !=="" ) {
+            $pQuery = mysqli_query($conn, "SELECT * FROM users WHERE id=$userId");
+            if (!$pQuery) {
+                die("PASSWORD VERIFICATION FIALED ".mysqli_error($conn));
+            }else {
+                $dbPassword = mysqli_fetch_assoc($pQuery)['password'];
+                if (password_verify($password, $dbPassword)) {
+                    // IF CORRECT SET UPDATE TO USER TYPE 
+        
+                    $updateUTQuery = mysqli_query($conn, "UPDATE `users` SET `user_type`='$type' WHERE id=$id");
+                    if (!$updateUTQuery) {
+                        die("UNABLE TO UPDATE USER TYPE ".mysqli_error($conn));
+                    }else{
+                        echo "<span class='text-success'>USER TYPE CHANGE SUCCESSFULLY</span>";
+                    }
+                }else{
+                    echo "<span class='text-danger'>INVALID PASSWORD</span>";
+                }
+            }
+        }else{
+            echo "ALL FIELD REQUIRED";
+        }
+        
+    }
+
+    // FETCH USER DETAILS 
+
+    if (isset($_POST['fetchSingleUser'])) {
+      
+        $userid = clean($_POST['userid']);
+        $suQuery = mysqli_query($conn, "SELECT * FROM users WHERE id=$userid");
+        if (!$suQuery) {
+            die("UNABLE TO FETCH USERS ".mysqli_error($conn));
+        }else {
+            $row = mysqli_fetch_assoc($suQuery);
+            $id = $row['id']; 
+            $fullname =ucwords($row['fullname']);
+            $e = $row['email'];
+            $phone = $row['phone']; 
+            $usertype = ucwords($row['user_type']);
+            $status = $row['status'];
+
+           echo "
+             <div class='m-3'>
+            <input type='text' name='' id='email' value='$e' class='form-control' style='visibility:hidden' disabled>
+              
+            <div class='form-group'>
+                    <label class='label'> Action: <label>
+               
+              </div>
+              
+                <div class='form-group'>               
+                  <select name='users-actions' id='user-actions' class='form-control order-input'>
+                      <option value='' selected disabled>SELECT ACTION</option>
+                      <option value='status'>CHANGE STATUS</option>
+                      <option value='usertype'>CHANGE USERTYPE</option>
+                  </select>     
+              </div> 
+              <div class='show-action ml-3 mr-3' id='show-popup-actions'></div>             
+          </div>
+         
+            
+          <div class='list-container text-light'> 
+            <ol class='single-list'>
+                <li>FULLNAME</li>
+                <li> $fullname </li>
+            </ol>
+            <ol class='single-list'>
+                <li>EMAIL ADDRESS</li>
+                <li> $e</li>
+            </ol>
+            <ol class='single-list'>
+                <li>PHONE</li>
+                <li>  $phone</li>
+            </ol>
+            <ol class='single-list'>
+                <li>USERTYPE</li>
+                <li> $usertype</li>
+            </ol>
+            <ol class='single-list'>
+                <li>STATUS</li>
+                <li> $status </li>
+            </ol>
+          
+          </div>
+          ";
+           
+        }
+
+        
+    }
+ 
+    
