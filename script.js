@@ -151,46 +151,76 @@ transactionTable.addEventListener("click", () => {
   }).done(function () {
     // PENDING ORDERS
 
-    let btnPendingOrders = document.getElementsByName("btn-pending-orders");
+    if (document.getElementsByName("btn-pending-orders")) {
+      let btnPendingOrders = document.getElementsByName("btn-pending-orders");
 
-    btnPendingOrders.forEach((el) => {
-      el.addEventListener("click", () => {
-        let orderId = el.getAttribute("data-order-id");
-        let merchantId = el.getAttribute("data-merchant-id");
-        let escrowId = el.getAttribute("data-escrow-id");
+      btnPendingOrders.forEach((el) => {
+        el.addEventListener("click", () => {
+          let orderId = el.getAttribute("data-order-id");
+          let merchantId = el.getAttribute("data-merchant-id");
+          let escrowId = el.getAttribute("data-escrow-id");
 
-        popupPage.style.display = "block";
+          popupPage.style.display = "block";
 
-        showPopupContent.innerHTML = "Loading...";
-        showPopupContent.innerHTML = merchantId;
-        // payment request
-        $.ajax({
-          url: url,
-          method: "POST",
-          data: {
-            getMerchantPaymentDetails: true,
-            merchantId: merchantId,
-            escrowId: escrowId,
-            orderId: orderId,
-          },
-          beforeSend() {},
-          success(data) {
-            showPopupContent.innerHTML = data;
-          },
-        }).done(() => {
-          let accept = _("btn-accept");
-          let decline = _("btn-decline");
-          let showStatus = _("show-status");
-          let trxTrackId = _("trx_track_id");
-          accept.addEventListener("click", () => {
-            if (clean(trxTrackId) > 0) {
+          showPopupContent.innerHTML = "Loading...";
+          showPopupContent.innerHTML = merchantId;
+          // payment request
+          $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+              getMerchantPaymentDetails: true,
+              merchantId: merchantId,
+              escrowId: escrowId,
+              orderId: orderId,
+            },
+            beforeSend() {},
+            success(data) {
+              showPopupContent.innerHTML = data;
+            },
+          }).done(() => {
+            let accept = _("btn-accept");
+            let decline = _("btn-decline");
+            let showStatus = _("show-status");
+            let trxTrackId = _("trx_track_id");
+            accept.addEventListener("click", () => {
+              if (clean(trxTrackId) > 0) {
+                $.ajax({
+                  url: url,
+                  method: "POST",
+                  data: {
+                    acceptOrder: true,
+                    orderId: orderId,
+                    trxTrackId: trxTrackId.value,
+                  },
+                  beforeSend() {
+                    accept.disabled = true;
+                    decline.disabled = true;
+                    showStatus.innerHTML = "";
+                  },
+                  success(data) {
+                    if (data === "Order Submitted") {
+                      alert(data);
+                      location.reload();
+                    } else {
+                      showStatus.innerHTML = data;
+                    }
+                    // console.log(data);
+                  },
+                });
+              } else {
+                showStatus.innerHTML = error("Invalid Trx Track Id");
+                s;
+              }
+            });
+            //   DECLINE ORDER
+            decline.addEventListener("click", () => {
               $.ajax({
                 url: url,
                 method: "POST",
                 data: {
-                  acceptOrder: true,
+                  declineOrder: true,
                   orderId: orderId,
-                  trxTrackId: trxTrackId.value,
                 },
                 beforeSend() {
                   accept.disabled = true;
@@ -198,7 +228,7 @@ transactionTable.addEventListener("click", () => {
                   showStatus.innerHTML = "";
                 },
                 success(data) {
-                  if (data === "Order Submitted") {
+                  if (data === "Order Declined") {
                     alert(data);
                     location.reload();
                   } else {
@@ -207,39 +237,49 @@ transactionTable.addEventListener("click", () => {
                   // console.log(data);
                 },
               });
-            } else {
-              showStatus.innerHTML = error("Invalid Trx Track Id");
-              s;
-            }
-          });
-          //   DECLINE ORDER
-          decline.addEventListener("click", () => {
-            $.ajax({
-              url: url,
-              method: "POST",
-              data: {
-                declineOrder: true,
-                orderId: orderId,
-              },
-              beforeSend() {
-                accept.disabled = true;
-                decline.disabled = true;
-                showStatus.innerHTML = "";
-              },
-              success(data) {
-                if (data === "Order Declined") {
-                  alert(data);
-                  location.reload();
-                } else {
-                  showStatus.innerHTML = data;
-                }
-                // console.log(data);
-              },
             });
           });
         });
       });
-    });
+    }
+
+    if (document.getElementsByName("btn-final-transaction-customer-approval")) {
+      let btnFinalTransCusApproval = document.getElementsByName(
+        "btn-final-transaction-customer-approval"
+      );
+
+      btnFinalTransCusApproval.forEach((el) => {
+        el.addEventListener("click", () => {
+          let orderId = el.getAttribute("data-order-id");
+
+          if (confirm("Are you sure you want to approve the delivery")) {
+            $.ajax({
+              url: url,
+              method: "POST",
+              data: {
+                approvedDelivery: true,
+                orderId: orderId,
+              },
+              beforeSend() {
+                showPopupContent.innerHTML =
+                  "<h3 class='text-center m-3'> Loading... </h3>";
+                popupPage.style.display = "block";
+              },
+              success(data) {
+                showPopupContent.innerHTML = data;
+
+                if (data === "Delivery approved successfully") {
+                  alert(data);
+                  location.reload();
+                }
+              },
+            });
+          } else {
+            console.log("cancelled");
+          }
+        });
+      });
+    }
   });
 });
 
@@ -568,12 +608,12 @@ escrow.addEventListener("click", () => {
                   beforeSend() {
                     // accept.disabled = true;
                     // decline.disabled = true;
-                    // showStatus.innerHTML = "";
+                    showStatus.innerHTML = "";
                   },
                   success(data) {
                     if (data === "Order Submitted") {
-                      // alert(data);
-                      // location.reload();
+                      alert(data);
+                      location.reload();
                     } else {
                       showStatus.innerHTML = data;
                     }

@@ -275,6 +275,27 @@
                 }else if($status === 'declined'){
                     echo "<li><button class='btn-order-declined' disabled> Declined </button></li>
                     ";
+                }else{
+                    // CHECK IF IT'S IN TRANSIT 
+                    $transCheckQuery = $conn->query("SELECT * FROM transit_transaction WHERE request_id = $id "); 
+                    if (!$transCheckQuery) {
+                        die($conn->error);
+                    }else{
+                        if ($transCheckQuery->num_rows > 0) {
+                            $transRow = $transCheckQuery->fetch_assoc();
+                            $transit_level = (int)$transRow['transit_level'];
+                            if ($transit_level === 3) {
+                                echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-escrow-id='$escrow_id' data-order-id=$id name='btn-final-transaction-customer-approval'> Click here to approve delivery </button></li>
+                            ";
+                            }else{
+                                echo "<li><button class='btn-order-declined await-seller' disabled> $status </button></li>";
+                            }
+                            
+                        }else{
+                            echo "<li><button class='btn-order-declined' disabled> $status </button></li>
+                            ";
+                        }
+                    }
                 }
                 echo '</ol>';
                 $sn++;
@@ -416,7 +437,7 @@
             if ($rCheckQuery->num_rows > 0) {
                 echo error("Order Already Submitted for this request");
             }else{
-                $uOrderQuery = $conn->query("INSERT INTO `transit_transaction`(request_id, `escrow_id`, `customer_id`, `merchant_id`, `trx_track_id`, `status`, `transit_level`) VALUES ($id, $escrow_id, $customerId, $merchant_id, '$trxTrackId', 'Awaiting Escrow Payment Approval', 1)");
+                $uOrderQuery = mysqli_multi_query($conn, "INSERT INTO `transit_transaction`(request_id, `escrow_id`, `customer_id`, `merchant_id`, `trx_track_id`, `status`, `transit_level`) VALUES ($id, $escrow_id, $customerId, $merchant_id, '$trxTrackId', 'Awaiting Escrow Payment Approval', 1); UPDATE request_table SET request_table.status = 'Awaiting Escrow Payment Approval' WHERE request_table.id = $orderId");
 
                 if (!$uOrderQuery) {
                     die($conn->error);
@@ -1002,14 +1023,14 @@
        
         // CHECK IF REQUEST ID ALREADY EXIST 
         
-        echo $orderId;
+    
         $rCheckQuery = $conn->query("SELECT * FROM transit_transaction WHERE request_id = $orderId");
         
         if (!$rCheckQuery) {
             die(" Transaction Check Failed ".$conn->error);
         }else{
             if ($rCheckQuery->num_rows > 0) {
-                $updateTQuery = $conn->query("UPDATE `transit_transaction` SET `status`='Awaiting Seller Delivery',`transit_level`='2',`updated_at`= NOW() WHERE request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Seller Delivery' WHERE request_table.id = $orderId");
+                $updateTQuery = mysqli_multi_query($conn, "UPDATE `transit_transaction` SET `status`='Awaiting Seller Delivery',`transit_level`='2',`updated_at`= NOW() WHERE request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Seller Delivery' WHERE request_table.id = $orderId");
 
 
                 if (!$updateTQuery) {
@@ -1038,5 +1059,19 @@
             die($conn->error);
         }else{
             echo "Order Declined";
+        }
+    }
+
+    // FINAL DELIVERY APPROVAL 
+    if (isset($_POST['approvedDelivery'])) {
+        extract($_POST);
+        $orderId = clean($orderId);
+
+        $dAQuery= mysqli_multi_query($conn, "UPDATE transit_transaction SET transit_level = 4, transit_transaction.status = 'completed' WHERE transit_transaction.request_id = $orderId; UPDATE request_table SET request_table.status = 'completed' WHERE request_table.id = $orderId");
+
+        if (!$dAQuery) {
+            die($conn->error);
+        }else{
+            echo "Delivery approved successfully";
         }
     }

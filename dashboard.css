@@ -215,7 +215,13 @@ nav div:last-child {
 
 /* ORDER SECTION  */
 .pending {
-  background-color: #ff78495c;
+  background-color: #b13408;
+  color: #fff;
+}
+
+.await-seller {
+  background-color: #08818d;
+  color: #fff;
 }
 .completed {
   background-color: #cfedb5bd;

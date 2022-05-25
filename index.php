@@ -21,7 +21,7 @@
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="dashboard.css?v=09" />
+    <link rel="stylesheet" href="dashboard.css?v=89" />
   </head>
   <body>
     <nav>
@@ -69,6 +69,6 @@
       </div>
     </div>
    <script src="./js/functions.js"></script>
-    <script src="./script.js?v=7887"></script>
+    <script src="./script.js?v=1111"></script>
   </body>
 </html>
