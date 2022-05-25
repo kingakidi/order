@@ -36,11 +36,20 @@
           <section class="action">
           
               <button class="btn-action" id="place-order">Send Food</button>
-            <button class="btn-action" id="transaction-table">Transactions</button
-            ><button class="btn-action" name="btn-users" id="btn-users">Users</button
-            >
-            <button class="btn-action" name="btn-escrow" id="btn-escrow">Escrow Requests</button
-            >
+            <button class="btn-action" id="transaction-table">Transactions</button>
+          
+            <?php 
+              if ($_SESSION['oUserType'] === 'admin') {
+                echo '<button class="btn-action" name="btn-users" id="btn-users">Users</button>';
+              }
+
+              if ($_SESSION['oUserType'] === 'escrow') {
+                echo '<button class="btn-action" name="btn-escrow" id="btn-escrow">Escrow Requests</button';
+              }
+            
+            ?>
+            
+            
           </section>
           <section class="cards">
             <div class="card " name="request" id="send-request"><i class="bi bi-cloud-upload"></i> <span>Send</span> </div>
@@ -69,6 +78,6 @@
       </div>
     </div>
    <script src="./js/functions.js"></script>
-    <script src="./script.js?v=1111"></script>
+    <script src="./script.js?v=9111"></script>
   </body>
 </html>

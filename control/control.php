@@ -738,7 +738,7 @@
                     
                     echo "<ol class='single-list $status'>
                     <li> $sn </li>
-                    <li> you send $customer_username $outcome $food_name </li>";
+                    <li> Kindly send $customer_username,  $outcome $food_name and confirm </li>";
 
                     if ($status === 'pending') {
                         echo "<li><button class='btn-order-pending' disabled> Pending </button></li>";
@@ -748,6 +748,29 @@
                     }else if($status === 'declined'){
                         echo "<li><button class='btn-order-declined' disabled> Declined </button></li>
                         ";
+                    }else {
+
+                         // CHECK IF IT'S IN TRANSIT 
+                    $transCheckQuery = $conn->query("SELECT * FROM transit_transaction WHERE request_id = $id "); 
+                    if (!$transCheckQuery) {
+                        die($conn->error);
+                    }else{
+                        if ($transCheckQuery->num_rows > 0) {
+                            $transRow = $transCheckQuery->fetch_assoc();
+                            $transit_level = (int)$transRow['transit_level'];
+                            if ($transit_level === 2) {
+                                echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-escrow-id='$escrow_id' data-order-id=$id name='btn-final-transaction-merchant-approval'> Click here to confirm delivery </button></li>
+                            ";
+                            }else{
+                                echo "<li><button class='btn-order-declined await-seller' disabled> $status </button></li>";
+                            }
+                            
+                        }else{
+                            echo "<li><button class='btn-order-declined' disabled> $status </button></li>
+                            ";
+                        }
+                    }
+                       
                     }
                     echo '</ol>';
                     $sn++;
@@ -936,8 +959,8 @@
                 <ol class='single-list' id='userTable'>
                     
                         <li>S/N</li>
-                        <li>Merchant Username</li>
-                        <li>Customer Username</li>
+                        <li>Seller</li>
+                        <li>Buyer</li>
                         <li>Transaction Track Id</li>
                         <li> Status/Action</li>
                         
@@ -1073,5 +1096,20 @@
             die($conn->error);
         }else{
             echo "Delivery approved successfully";
+        }
+    }
+
+    
+    // MERCHANT DELIVERY APPROVAL 
+    if (isset($_POST['merchantDeliveryApproval'])) {
+        extract($_POST);
+        $orderId = (int)clean($orderId);
+      
+        $dAQuery= mysqli_multi_query($conn, "UPDATE transit_transaction SET transit_level = 3, transit_transaction.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE transit_transaction.request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE request_table.id = $orderId");
+
+        if (!$dAQuery) {
+            die($conn->error);
+        }else{
+            echo "Merchant delivery submitted successfully";
         }
     }
