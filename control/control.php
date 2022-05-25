@@ -964,3 +964,76 @@
             }
         }
     }
+
+    // GET ESCROW DETAILS 
+
+    if (isset($_POST['getEscrowTransactionDetails'])) {
+        extract($_POST);
+       
+
+
+        $transaction = getTransitTransactionById($transId);
+        
+        // print_r($transaction);
+        extract($transaction);
+        $merchant_username = merchantDetailsById($merchant_id);
+        $customer_username = merchantDetailsById($customer_id)['username'];
+        $trx_track_id = strtoupper($trx_track_id);
+        echo "<input type='text' value='$trx_track_id' data-order-id=$request_id id='trx_track_id' hidden /><div class='single-request '><p>$customer_username has initiate payment   transaction track id: $trx_track_id Kindly acknowlege </p> 
+        <div id='show-status'></div>
+        <div>
+            <button id='btn-accept'> Approve </button>
+            <button id='btn-decline'> Decline </button>
+        </div> 
+        </div>";
+
+    }
+
+    // ACCEPT ORDER  
+    if (isset($_POST['escrowAcceptCustomerPayment'])) {
+        extract($_POST);
+        $orderId = clean($orderId);
+        $trxTrackId = clean($trxTrackId);
+        $request = getRequestDetailsById($orderId);
+        extract($request);
+
+        $customerId = merchantDetailsByUsername($customer_username)['id'];
+       
+        // CHECK IF REQUEST ID ALREADY EXIST 
+        
+        $rCheckQuery = $conn->query("SELECT * FROM transit_transaction WHERE request_id = $orderId");
+        
+        if (!$rCheckQuery) {
+            die($conn->error);
+        }else{
+            if ($rCheckQuery->num_rows > 0) {
+                echo error("Order Already Submitted for this request");
+            }else{
+                $uOrderQuery = $conn->query("INSERT INTO `transit_transaction`(request_id, `escrow_id`, `customer_id`, `merchant_id`, `trx_track_id`, `status`, `transit_level`) VALUES ($id, $escrow_id, $customerId, $merchant_id, '$trxTrackId', 'Awaiting Escrow Payment Approval', 1)");
+
+                if (!$uOrderQuery) {
+                    die($conn->error);
+                }else{
+                    echo "Order Submitted";
+                }
+            }
+        }
+        
+        
+   
+       
+    }
+
+    // DECLINE ORDER  
+    if (isset($_POST['escrowRejectCustomerPayment'])) {
+        extract($_POST);
+        $orderId = clean($orderId);
+ 
+        $uOrderQuery= $conn->query("UPDATE `request_table` SET request_table.status ='declined' WHERE request_table.id = $orderId");
+ 
+        if (!$uOrderQuery) {
+            die($conn->error);
+        }else{
+            echo "Order Declined";
+        }
+    }

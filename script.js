@@ -238,9 +238,6 @@ transactionTable.addEventListener("click", () => {
             });
           });
         });
-        popupClose.addEventListener("click", () => {
-          popupPage.style.display = "none";
-        });
       });
     });
   });
@@ -529,7 +526,95 @@ escrow.addEventListener("click", () => {
     },
     success(data) {
       showItems.innerHTML = data;
-      console.log(data);
     },
+  }).done(() => {
+    if (document.getElementsByName("btn-escrow-approval")) {
+      let escrowApproval = document.getElementsByName("btn-escrow-approval");
+      escrowApproval.forEach((el) => {
+        el.addEventListener("click", () => {
+          transId = el.getAttribute("data-transaction-track-id");
+          showPopupContent.innerHTML = "Loading...";
+          popupPage.style.display = "block";
+          let orderId = el.getAttribute("data-order-id");
+          // console.log(popupPage);
+          $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+              getEscrowTransactionDetails: true,
+              transId: transId,
+            },
+            beforeSend() {},
+            success(data) {
+              showPopupContent.innerHTML = data;
+            },
+          }).done(() => {
+            let accept = _("btn-accept");
+            let decline = _("btn-decline");
+            let showStatus = _("show-status");
+            let trxTrackId = _("trx_track_id");
+            accept.addEventListener("click", () => {
+              if (clean(trxTrackId) > 0) {
+                $.ajax({
+                  url: url,
+                  method: "POST",
+                  data: {
+                    escrowAcceptCustomerPayment: true,
+                    orderId: orderId,
+                    trxTrackId: trxTrackId.value,
+                  },
+                  beforeSend() {
+                    accept.disabled = true;
+                    decline.disabled = true;
+                    showStatus.innerHTML = "";
+                  },
+                  success(data) {
+                    if (data === "Order Submitted") {
+                      alert(data);
+                      location.reload();
+                    } else {
+                      showStatus.innerHTML = data;
+                    }
+                    // console.log(data);
+                  },
+                });
+              } else {
+                showStatus.innerHTML = error("Invalid Trx Track Id");
+                s;
+              }
+            });
+            //   DECLINE ORDER
+            decline.addEventListener("click", () => {
+              $.ajax({
+                url: url,
+                method: "POST",
+                data: {
+                  declineOrder: true,
+                  orderId: orderId,
+                },
+                beforeSend() {
+                  accept.disabled = true;
+                  decline.disabled = true;
+                  showStatus.innerHTML = "";
+                },
+                success(data) {
+                  if (data === "Order Declined") {
+                    alert(data);
+                    location.reload();
+                  } else {
+                    showStatus.innerHTML = data;
+                  }
+                  // console.log(data);
+                },
+              });
+            });
+          });
+        });
+      });
+    }
   });
+});
+
+popupClose.addEventListener("click", () => {
+  popupPage.style.display = "none";
 });

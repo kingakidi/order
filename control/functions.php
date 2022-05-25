@@ -110,3 +110,14 @@
             }
         }
     }
+
+    function getTransitTransactionById($id)
+    {
+        global $conn; 
+        $tQuery = $conn->query("SELECT * FROM transit_transaction WHERE transit_transaction.id =$id");
+        if (!$tQuery) {
+            return die($conn->error);
+        }else{
+            return $tQuery->fetch_assoc();
+        }
+    }
