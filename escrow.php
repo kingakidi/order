@@ -4,12 +4,12 @@
       header("Location: ./index.php");
     }
 ?>
-    <title>Register</title>
+    <title>Esrow Account</title>
   </head>
   <body>
     <div class="form-container">
      
-      <h1>SignUp</h1>
+      <h1>Escrow Account Signup</h1>
       <form action="" class="signup" id="register">
         <input type="text" class='order-input' id="username" placeholder="Username" />
         <div id='check-username'></div>
