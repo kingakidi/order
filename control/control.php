@@ -942,7 +942,7 @@
                     <li> $trx_track_id </li>";
                     
                     if ($transit_level === 1) {
-                        echo "<li><button class='btn-order-pending' data-transaction-track-id=$id  name='btn-escrow-approval'> Awaiting your approval </button></li>";
+                        echo "<li><button class='btn-order-pending' data-order-id=$request_id data-transaction-track-id=$id  name='btn-escrow-approval'> Awaiting your approval </button></li>";
                         
                     }else if($transit_level === 2){
                     
@@ -991,31 +991,34 @@
 
     // ACCEPT ORDER  
     if (isset($_POST['escrowAcceptCustomerPayment'])) {
+      
         extract($_POST);
         $orderId = clean($orderId);
         $trxTrackId = clean($trxTrackId);
-        $request = getRequestDetailsById($orderId);
-        extract($request);
+        // $request = getRequestDetailsById($orderId);
+        // extract($request);
 
-        $customerId = merchantDetailsByUsername($customer_username)['id'];
+        // $customerId = merchantDetailsByUsername($customer_username)['id'];
        
         // CHECK IF REQUEST ID ALREADY EXIST 
         
+        echo $orderId;
         $rCheckQuery = $conn->query("SELECT * FROM transit_transaction WHERE request_id = $orderId");
         
         if (!$rCheckQuery) {
-            die($conn->error);
+            die(" Transaction Check Failed ".$conn->error);
         }else{
             if ($rCheckQuery->num_rows > 0) {
-                echo error("Order Already Submitted for this request");
-            }else{
-                $uOrderQuery = $conn->query("INSERT INTO `transit_transaction`(request_id, `escrow_id`, `customer_id`, `merchant_id`, `trx_track_id`, `status`, `transit_level`) VALUES ($id, $escrow_id, $customerId, $merchant_id, '$trxTrackId', 'Awaiting Escrow Payment Approval', 1)");
+                $updateTQuery = $conn->query("UPDATE `transit_transaction` SET `status`='Awaiting Seller Delivery',`transit_level`='2',`updated_at`= NOW() WHERE request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Seller Delivery' WHERE request_table.id = $orderId");
 
-                if (!$uOrderQuery) {
-                    die($conn->error);
+
+                if (!$updateTQuery) {
+                    die("Updating Transit Failed " .$conn->error);
                 }else{
-                    echo "Order Submitted";
+                    echo "Submitted Successfully";
                 }
+            }else{
+               echo error("Invalid Transaction Request");
             }
         }
         

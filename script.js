@@ -537,6 +537,7 @@ escrow.addEventListener("click", () => {
           popupPage.style.display = "block";
           let orderId = el.getAttribute("data-order-id");
           // console.log(popupPage);
+          console.log(orderId);
           $.ajax({
             url: url,
             method: "POST",
@@ -553,6 +554,7 @@ escrow.addEventListener("click", () => {
             let decline = _("btn-decline");
             let showStatus = _("show-status");
             let trxTrackId = _("trx_track_id");
+            console.log(orderId);
             accept.addEventListener("click", () => {
               if (clean(trxTrackId) > 0) {
                 $.ajax({
@@ -564,18 +566,19 @@ escrow.addEventListener("click", () => {
                     trxTrackId: trxTrackId.value,
                   },
                   beforeSend() {
-                    accept.disabled = true;
-                    decline.disabled = true;
-                    showStatus.innerHTML = "";
+                    // accept.disabled = true;
+                    // decline.disabled = true;
+                    // showStatus.innerHTML = "";
                   },
                   success(data) {
                     if (data === "Order Submitted") {
-                      alert(data);
-                      location.reload();
+                      // alert(data);
+                      // location.reload();
                     } else {
                       showStatus.innerHTML = data;
                     }
-                    // console.log(data);
+
+                    console.log(data);
                   },
                 });
               } else {
