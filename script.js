@@ -5,6 +5,7 @@ let orderBtn = _("place-order");
 let showItems = _("show-actions");
 let transactionTable = _("transaction-table");
 let btnUsers = _("btn-users");
+showPopupContent.style.color = "#fff";
 orderBtn.addEventListener("click", () => {
   // GET PLACE OTHER FORM
   $.ajax({

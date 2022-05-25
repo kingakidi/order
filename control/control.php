@@ -460,7 +460,7 @@
         // CHECK IF THE PASSWORD IS CORRECT 
             if ($password !== "") {
                 
-                $pQuery = mysqli_query($conn, "SELECT * FROM users WHERE id='$id'");
+                $pQuery = mysqli_query($conn, "SELECT * FROM users WHERE id='$statusUserId'");
                 if (!$pQuery) {
                     die("PASSWORD VERIFICATION FIALED ".mysqli_error($conn));
                 }else {
@@ -573,7 +573,12 @@
             $phone = $row['phone']; 
             $usertype = ucwords($row['user_type']);
             $status = $row['status'];
-
+            if ($status === "0") {
+                $showStatus = 'Deactivated';
+            }else if($status === "1"){
+                $showStatus = "Active";
+            }
+            
            echo "
              <div class='m-3'>
             <input type='text' name='' id='email' value='$e' class='order-input' style='visibility:hidden' disabled>
@@ -613,7 +618,7 @@
             </ol>
             <ol class='single-list'>
                 <li>STATUS</li>
-                <li> $status </li>
+                <li> $showStatus </li>
             </ol>
           
           </div>

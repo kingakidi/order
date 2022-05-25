@@ -53,9 +53,9 @@ register.addEventListener("submit", (e) => {
   ) {
     // CHECK FOR PASSWORD LENGTH
     if (clean(password) < 6) {
-      show.innerHTML = "Password is too short";
+      show.innerHTML = error("Password is too short");
     } else if (clean(phone) < 11) {
-      show.innerHTML = "Invalid Phone number";
+      show.innerHTML = error("Invalid Phone number");
     } else {
       // SEND
       $.ajax({
@@ -74,9 +74,9 @@ register.addEventListener("submit", (e) => {
         beforeSend() {},
         success(data) {
           show.innerHTML = data;
-          if (data === "Register Successfully") {
+          if (data === "Escrow Application Submitted for approval") {
             show.innerHTML = success(data);
-            location.replace("./login.php?register=successfully");
+            // location.replace("./login.php?register=successfully");
           } else {
             show.innerHTML = error(data);
           }

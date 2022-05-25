@@ -283,8 +283,8 @@ nav div:last-child {
 
 @media (max-width: 650px) {
   div.card {
-    width: 90px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
   }
 
   .dashboard-main {
@@ -298,6 +298,19 @@ nav div:last-child {
   }
 }
 
+@media (max-width: 450px) {
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 10px;
+    justify-items: center;
+  }
+
+  .popup-content {
+    width: 90vw;
+  }
+}
 .btn-action {
   background-color: initial;
   background-color: initial;
