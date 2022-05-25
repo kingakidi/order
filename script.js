@@ -181,29 +181,36 @@ transactionTable.addEventListener("click", () => {
           let accept = _("btn-accept");
           let decline = _("btn-decline");
           let showStatus = _("show-status");
+          let trxTrackId = _("trx_track_id");
           accept.addEventListener("click", () => {
-            $.ajax({
-              url: url,
-              method: "POST",
-              data: {
-                acceptOrder: true,
-                orderId: orderId,
-              },
-              beforeSend() {
-                accept.disabled = true;
-                decline.disabled = true;
-                showStatus.innerHTML = "";
-              },
-              success(data) {
-                if (data === "Order Submitted") {
-                  alert(data);
-                  location.reload();
-                } else {
-                  showStatus.innerHTML = data;
-                }
-                // console.log(data);
-              },
-            });
+            if (clean(trxTrackId) > 0) {
+              $.ajax({
+                url: url,
+                method: "POST",
+                data: {
+                  acceptOrder: true,
+                  orderId: orderId,
+                  trxTrackId: trxTrackId.value,
+                },
+                beforeSend() {
+                  accept.disabled = true;
+                  decline.disabled = true;
+                  showStatus.innerHTML = "";
+                },
+                success(data) {
+                  if (data === "Order Submitted") {
+                    alert(data);
+                    location.reload();
+                  } else {
+                    showStatus.innerHTML = data;
+                  }
+                  // console.log(data);
+                },
+              });
+            } else {
+              showStatus.innerHTML = error("Invalid Trx Track Id");
+              s;
+            }
           });
           //   DECLINE ORDER
           decline.addEventListener("click", () => {

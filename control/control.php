@@ -387,7 +387,7 @@
 
 
 
-        echo "<input type='text' value='$TRX_TRACK_ID' hidden /><div class='single-request '><p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr>  </p> <p> Escrow Payment Details  <br> Account Number: $escrow_account_number <br> Bank: $escrow_bank_code <br> Fullname: $escrow_fullname <br> TXT_TRCK_ID: $TRX_TRACK_ID</p> 
+        echo "<input type='text' value='$TRX_TRACK_ID' id='trx_track_id' hidden /><div class='single-request '><p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr>  </p> <p> Escrow Payment Details  <br> Account Number: $escrow_account_number <br> Bank: $escrow_bank_code <br> Fullname: $escrow_fullname <br> TXT_TRCK_ID: $TRX_TRACK_ID</p> 
         <div id='show-status'></div>
         <div>
             <button id='btn-accept'> Accept </button>
@@ -398,16 +398,37 @@
 
     // ACCEPT ORDER  
     if (isset($_POST['acceptOrder'])) {
-       extract($_POST);
-       $orderId = clean($orderId);
+        extract($_POST);
+        $orderId = clean($orderId);
+        $trxTrackId = clean($trxTrackId);
+        $request = getRequestDetailsById($orderId);
+        extract($request);
 
-       $uOrderQuery= $conn->query("UPDATE `request_table` SET request_table.status ='completed' WHERE request_table.id = $orderId");
+        $customerId = merchantDetailsByUsername($customer_username)['id'];
+       
+        // CHECK IF REQUEST ID ALREADY EXIST 
+        
+        $rCheckQuery = $conn->query("SELECT * FROM transit_transaction WHERE request_id = $orderId");
+        
+        if (!$rCheckQuery) {
+            die($conn->error);
+        }else{
+            if ($rCheckQuery->num_rows > 0) {
+                echo error("Order Already Submitted for this request");
+            }else{
+                $uOrderQuery = $conn->query("INSERT INTO `transit_transaction`(request_id, `escrow_id`, `customer_id`, `merchant_id`, `trx_track_id`, `status`, `transit_level`) VALUES ($id, $escrow_id, $customerId, $merchant_id, '$trxTrackId', 'Awaiting Escrow Payment Approval', 1)");
 
-       if (!$uOrderQuery) {
-           die($conn->error);
-       }else{
-           echo "Order Submitted";
-       }
+                if (!$uOrderQuery) {
+                    die($conn->error);
+                }else{
+                    echo "Order Submitted";
+                }
+            }
+        }
+        
+        
+   
+       
     }
 
     // DECLINE ORDER  
@@ -888,9 +909,56 @@
             die($conn->error);
         }else{
             if ($gQuery->num_rows > 0) {
+                echo " <div class='order-list'>
+                <h3>Send Request List</h3>
+                <div class='list-container'>
+                <ol class='single-list' id='userTable'>
+                    
+                        <li>S/N</li>
+                        <li>Merchant Username</li>
+                        <li>Customer Username</li>
+                        <li>Transaction Track Id</li>
+                        <li> Status/Action</li>
+                        
+                    </ol>';";
+                
+                $sn = 1;
                 while ($row = $gQuery->fetch_assoc()) {
-                    print_r($row);
-                }
+                    extract($row);
+                    $transit_level = (int)$transit_level;
+                    $merchant = merchantDetailsById($merchant_id);
+                    $customer = merchantDetailsById($customer_id);
+
+                    $merchant_username =  ucwords($merchant['username']);
+                    $customer_username =  ucwords($customer['username']);
+
+                 
+                    echo "<ol class='single-list pending'>
+                    <li> $sn </li>
+                    <li> $merchant_username </li>
+                    <li> $customer_username </li>
+
+                    
+                    <li> $trx_track_id </li>";
+                    
+                    if ($transit_level === 1) {
+                        echo "<li><button class='btn-order-pending' data-transaction-track-id=$id  name='btn-escrow-approval'> Awaiting your approval </button></li>";
+                        
+                    }else if($transit_level === 2){
+                    
+                        echo "<li><button class='btn-order-pending' disabled> Awaiting Seller Action </button></li>";
+                    }else if($transit_level === 3){
+                        echo "<li><button class='btn-order-pending' disabled> Awaiting buyer Acknowledgement </button></li>
+                        ";
+                    }
+                    echo '</ol>';
+                    $sn++;
+                            
+                        
+                    }                
+                    echo "</div>
+                </div>";
+             
             }else{
                 echo error("<h3 class='text-center'>You have no Escrow transaction a the moment </h3>");
             }
