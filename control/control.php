@@ -2,6 +2,8 @@
     require("./functions.php");
 
 
+    // REGISTER USER 
+
     if (isset($_POST['registerUser'])) {
        extract($_POST);
         $username = clean($username);
@@ -48,6 +50,52 @@
         }
     }
 
+    // ESCROW SIGNUP 
+    if (isset($_POST['escrowUserRegister'])) {
+        extract($_POST);
+         $username = clean($username);
+         $fullname = clean($fullname);
+         $email = clean($email);
+         $phone = clean($phone); 
+         $bank = clean($bank);
+         $account = clean($account); 
+         $password = ($password);
+ 
+         if (!empty($username) AND !empty($fullname) AND !empty($email) AND !empty($phone) AND !empty($bank) AND !empty($account) AND !empty($password)) {
+            
+             // CHECK FOR VALID USERNAME 
+            if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                 echo error("Invalid Email Address");
+            }else if (usernameCheck($username)) {
+                 echo error("Username already exist");
+             } else if(emailCheck($email)){
+                 echo error("Email already Exist ");
+             }else if(phoneCheck($phone)){
+                 echo error("Phone number already exist");
+             }else if (strlen($password) < 6) {
+                 echo error("Password is too short");
+             }else{
+                     $nPassword = password_hash($password, PASSWORD_DEFAULT);
+ 
+                     $query = $conn->query("INSERT INTO users (username, fullname, email, phone, bank_code, account_number, users.password, users.status, user_type) VALUES ('$username', '$fullname','$email', '$phone', '$bank', '$account', '$nPassword', 0, 'escrow')"); 
+ 
+                     if (!$query) {
+                         die($conn->error);
+                     }else{
+                         echo "Escrow Application Submitted for approval";
+                     }
+ 
+                 // SEND ALL TO DB 
+ 
+             }
+ 
+             // CHECK FOR PASSWORD LENGTH  
+ 
+             // CHECK FOR EMAIL VALIDITY 
+         }else{
+             echo error("All fields required");
+         }
+     }
     // LOGIN USER 
     if (isset($_POST['loginUser'])) {
        extract($_POST);

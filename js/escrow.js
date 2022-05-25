@@ -69,7 +69,7 @@ register.addEventListener("submit", (e) => {
           bank: bank.value,
           account: account.value,
           password: password.value,
-          registerUser: true,
+          escrowUserRegister: true,
         },
         beforeSend() {},
         success(data) {
