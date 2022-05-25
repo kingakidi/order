@@ -26,7 +26,25 @@ orderBtn.addEventListener("click", () => {
     let show = _("show");
     let btn = _("btn-order");
     let usernameCheck = _("check-username");
-
+    let escrow = _("escrow");
+    let showEscrow = _("show-escrow");
+    escrow.addEventListener("change", () => {
+      // Bring Escrow Fullname
+      $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+          getEscrowDetails: true,
+          id: escrow.value,
+        },
+        beforeSend() {
+          showEscrow.innerHTML = "Loading Escrow Details";
+        },
+        success(data) {
+          showEscrow.innerHTML = data;
+        },
+      });
+    });
     // CHECK USERNAME ON FOCUS OUT
     customerUsername.addEventListener("focusout", () => {
       if (clean(customerUsername) > 0) {

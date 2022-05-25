@@ -31,7 +31,25 @@ orderBtn.addEventListener("click", () => {
     let show = _("show");
     let btn = _("btn-order");
     let usernameCheck = _("check-username");
-
+    let escrow = _("escrow");
+    let showEscrow = _("show-escrow");
+    escrow.addEventListener("change", () => {
+      // Bring Escrow Fullname
+      $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+          getEscrowDetails: true,
+          id: escrow.value,
+        },
+        beforeSend() {
+          showEscrow.innerHTML = "Loading Escrow Details";
+        },
+        success(data) {
+          showEscrow.innerHTML = data;
+        },
+      });
+    });
     // CHECK USERNAME ON FOCUS OUT
     customerUsername.addEventListener("focusout", () => {
       if (clean(customerUsername) > 0) {
@@ -68,7 +86,8 @@ orderBtn.addEventListener("click", () => {
         clean(amount) > 0 &&
         clean(orderType) > 0 &&
         clean(gram) > 0 &&
-        clean(outcome) > 0
+        clean(outcome) > 0 &&
+        clean(escrow) > 0
       ) {
         // show.innerHTML = success("Good to go ");
         $.ajax({
@@ -81,6 +100,7 @@ orderBtn.addEventListener("click", () => {
             orderType: orderType.value,
             gram: gram.value,
             outcome: outcome.value,
+            escrow: escrow.value,
             sendOrder: true,
           },
           beforeSend() {

@@ -209,7 +209,28 @@
                 </div>
             </div>
             </div>
-            <div class='show' id='show'></div>
+            <div>
+            <label for='escrow'> Select Escrow </label>
+            <select name='' id='escrow' class='order-input' required>
+              <option value='' selected disabled>Select Escrow</option>";
+              $bytes = strtoupper(bin2hex(random_bytes(5)));
+                echo $bytes;
+                $eQuery = $conn->query("SELECT * FROM users WHERE user_type = 'escrow' AND users.status = 1");
+                if (!$eQuery) {
+                    die($conn->error);
+                }else{
+                    while ($row = $eQuery->fetch_assoc()) {
+                    extract($row);
+
+                    echo "<option value='$id'> $username </option>";
+                    }
+                }
+    
+            echo "</select>
+                <div id='show-escrow'> </div>
+            </div>";
+         
+            echo "<div class='show' id='show'></div>
             <div class='form-group'>
             <button type='submit' class='btn btn-order' id='btn-order'>
                 Place Request
@@ -217,6 +238,9 @@
             </div>
         </form>
         </div>";
+
+       
+           
     }
 
     // TRANSCACTION TABLE REQUEST 
@@ -293,7 +317,7 @@
         }else{
             if ($uQuery->num_rows > 0) {
                $dbFullname = $uQuery->fetch_assoc()['fullname'];
-               echo $dbFullname;
+               echo success(ucwords($dbFullname));
             }else{
                 echo "Invalid Username";
             }
@@ -827,3 +851,9 @@
     }
 
     
+    if (isset($_POST['getEscrowDetails'])) {
+        $escrowId = clean($_POST['id']);
+        $escrowDetails = merchantDetailsById($escrowId);
+
+        echo success(ucwords($escrowDetails['fullname']));
+    }
