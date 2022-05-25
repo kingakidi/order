@@ -40,9 +40,9 @@
 
     function merchantDetailsByUsername($username){
         global $conn; 
-        $uQuery = $conn->query("SELECT * FROM users WHERE users.username = $username");
+        $uQuery = $conn->query("SELECT * FROM users WHERE users.username = '$username'");
         if (!$uQuery) {
-         return die($conn->error);
+         return die("Username Verification: ".$conn->error);
         }else{
           return $uQuery->fetch_assoc();
         }

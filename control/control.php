@@ -213,8 +213,7 @@
             <label for='escrow'> Select Escrow </label>
             <select name='' id='escrow' class='order-input' required>
               <option value='' selected disabled>Select Escrow</option>";
-              $bytes = strtoupper(bin2hex(random_bytes(5)));
-                echo $bytes;
+              
                 $eQuery = $conn->query("SELECT * FROM users WHERE user_type = 'escrow' AND users.status = 1");
                 if (!$eQuery) {
                     die($conn->error);
@@ -268,7 +267,7 @@
                 <li> $merchant_username is sending you $outcome $food_name </li>";
 
                 if ($status === 'pending') {
-                    echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-order-id=$id name='btn-pending-orders'> Click here to view and Accept </button></li>
+                    echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-escrow-id='$escrow_id' data-order-id=$id name='btn-pending-orders'> Click here to view and Accept </button></li>
                 ";
                 }else if($status === 'completed'){
                     echo "<li><button class='btn-order-completed' disabled> Completed </button></li>
@@ -332,23 +331,32 @@
         $gram = clean($gram);
         $outcome = clean($outcome);
         $user_id = $_SESSION['oId'];
-        if (!empty($foodList) && !empty($customerUsername) && !empty($amount) && !empty($orderType) && !empty($gram) && !empty($outcome)) {
-            // VALIDITY OF USERNAME 
+        $escrow = clean($escrow);
+        $customerId = merchantDetailsByUsername($customerUsername)['id'];
 
+        if (!empty($foodList) && !empty($customerUsername) && !empty($amount) && !empty($orderType) && !empty($gram) && !empty($outcome) && !empty($escrow)) {
+            // VALIDITY OF USERNAME 
+            // CHECK IF THE ESCROW IS NOT THE SENDER 
+            
+            
             if ($_SESSION['oUsername'] === $customerUsername) {
                 echo error("You can't send item to yourself");
+            }else if($_SESSION['oId'] === $escrow){
+                echo error("You can't use yourself as Escrow  merchant on your sells");
+            }else if($escrow === $customerId){
+                echo error("Error: Receiver and Escrow merchant is can't be the same");
             }else{
                 if (verifyUsername($customerUsername)) {
-                    $addOrderQuery = $conn->query("INSERT INTO `request_table`(food_name, customer_username, merchant_id, amount, order_type, gram, outcome, status) VALUES ('$foodList', '$customerUsername', $user_id, $amount, '$orderType', $gram, $outcome, 'pending' )");
-      
+                    $addOrderQuery = $conn->query("INSERT INTO `request_table`(food_name, customer_username, merchant_id, escrow_id, amount, order_type, gram, outcome, request_table.status) VALUES ('$foodList', '$customerUsername', $user_id, $escrow, $amount, '$orderType', $gram, $outcome, 'pending' )");
+        
                     if (!$addOrderQuery) {
                         die(error($conn->error));
                     }else{
                         echo success("Order Placed Successfully");
                     }
-                  }else{
-                      echo error("Invalid Username");
-                  }
+                }else{
+                    echo error("Invalid Username");
+                }
             }
            
         }else{
@@ -359,16 +367,27 @@
 
     if (isset($_POST['getMerchantPaymentDetails'])) {
         extract($_POST);
-        $merchantId = $getMerchantPaymentDetails;
+         
+        $escrow = merchantDetailsById($escrowId);
         $merchant = merchantDetailsById($merchantId);
+
         $request = getRequestDetailsById($orderId);
         extract($merchant);
         extract($request);
-       
+        $TRX_TRACK_ID = strtoupper(bin2hex(random_bytes(5)));
+        
         $merchant_username =  ucwords($merchant['username']);
         $grams = $request['gram'];
         $amount = $request['amount'];
-        echo "<div class='single-request '> <p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr> Make payment to <br> Account Number: $account_number <br> Bank: $bank_code <br> Fullname: $fullname</p> 
+        $fullname = ucwords($fullname);
+
+        $escrow_account_number = $escrow['account_number']; 
+        $escrow_bank_code = $escrow['bank_code']; 
+        $escrow_fullname = $escrow['fullname']; 
+
+
+
+        echo "<input type='text' value='$TRX_TRACK_ID' hidden /><div class='single-request '><p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr>  </p> <p> Escrow Payment Details  <br> Account Number: $escrow_account_number <br> Bank: $escrow_bank_code <br> Fullname: $escrow_fullname <br> TXT_TRCK_ID: $TRX_TRACK_ID</p> 
         <div id='show-status'></div>
         <div>
             <button id='btn-accept'> Accept </button>
@@ -677,7 +696,7 @@
                     
                     echo "<ol class='single-list $status'>
                     <li> $sn </li>
-                    <li> you are sending $customer_username $outcome $food_name </li>";
+                    <li> you send $customer_username $outcome $food_name </li>";
 
                     if ($status === 'pending') {
                         echo "<li><button class='btn-order-pending' disabled> Pending </button></li>";
@@ -727,7 +746,7 @@
                     
                     echo "<ol class='single-list $status'>
                     <li> $sn </li>
-                    <li> you are sending $customer_username $outcome $food_name </li>";
+                    <li> you send $customer_username $outcome $food_name </li>";
 
                     if ($status === 'pending') {
                         echo "<li><button class='btn-order-pending' disabled> Pending </button></li>";
@@ -776,7 +795,7 @@
                         
                         echo "<ol class='single-list $status'>
                         <li> $sn </li>
-                        <li> you are sending $customer_username $outcome $food_name </li>";
+                        <li> you send $customer_username $outcome $food_name </li>";
 
                         if ($status === 'pending') {
                             echo "<li><button class='btn-order-pending' disabled> Pending </button></li>";
@@ -824,7 +843,7 @@
                         
                         echo "<ol class='single-list $status'>
                         <li> $sn </li>
-                        <li> you are sending $customer_username $outcome $food_name </li>";
+                        <li> you send $customer_username $outcome $food_name </li>";
 
                         if ($status === 'pending') {
                             echo "<li><button class='btn-order-pending' disabled> Pending </button></li>";
@@ -856,4 +875,24 @@
         $escrowDetails = merchantDetailsById($escrowId);
 
         echo success(ucwords($escrowDetails['fullname']));
+    }
+
+
+    // GET ALL ESCROW REQUEST 
+    if (isset($_POST['getAllUsersEscrow'])) {
+     
+        $escrow_id = $_SESSION['oId'];
+        $gQuery = $conn->query("SELECT * FROM transit_transaction WHERE escrow_id = $escrow_id ");
+
+        if (!$gQuery) {
+            die($conn->error);
+        }else{
+            if ($gQuery->num_rows > 0) {
+                while ($row = $gQuery->fetch_assoc()) {
+                    print_r($row);
+                }
+            }else{
+                echo error("<h3 class='text-center'>You have no Escrow transaction a the moment </h3>");
+            }
+        }
     }

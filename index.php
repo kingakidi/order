@@ -25,7 +25,7 @@
   </head>
   <body>
     <nav>
-      <div class="logo"><?php echo ucwords($_SESSION['oUsername']); ?></div>
+      <div class="logo"><?php echo ucwords($_SESSION['oUsername']);  echo " | " . ucwords($_SESSION['oUserType']); ?></div>
       <div class="user-profile">
         <a href="./logout.php">Logout</a>
       </div>
@@ -34,9 +34,12 @@
       <div class="dashboard-container">
         <main class="dashboard-main">
           <section class="action">
+          
               <button class="btn-action" id="place-order">Send Food</button>
             <button class="btn-action" id="transaction-table">Transactions</button
             ><button class="btn-action" name="btn-users" id="btn-users">Users</button
+            >
+            <button class="btn-action" name="btn-escrow" id="btn-escrow">Escrow Requests</button
             >
           </section>
           <section class="cards">
@@ -66,6 +69,6 @@
       </div>
     </div>
    <script src="./js/functions.js"></script>
-    <script src="./script.js?v=77"></script>
+    <script src="./script.js?v=7"></script>
   </body>
 </html>
