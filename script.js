@@ -203,10 +203,9 @@ transactionTable.addEventListener("click", () => {
               } else {
                 // Image preview
                 if (fileInput.files && fileInput.files[0]) {
-                  
                   var reader = new FileReader();
                   reader.onload = function (e) {
-                  imagePreview.style.width = "120px";
+                    imagePreview.style.width = "120px";
 
                     imagePreview.innerHTML =
                       '<img src="' + e.target.result + '"/>';
@@ -379,15 +378,14 @@ request.forEach((el) => {
                 let showStatus = _("show-status");
                 let trxTrackId = _("trx_track_id");
                 let imagePreview1 = _("imagePreview1");
-                let imagePreview = _("imagePreview");
-                imagePreview.style.width = '120px'
-                
+                // let imagePreview = _("imagePreview");
+                // imagePreview.style.width = "120px";
+
                 console.log(orderId);
                 let receipt = _("receipt");
-                function fileValidation() {
+                function fileValidation_1() {
                   imagePreview1.innerHTML = "";
-                  imagePreview1.style.height = "0px";
-                  imagePreview1.style.width = "0px";
+
                   var fileInput = document.getElementById("receipt");
 
                   var filePath = fileInput.value;
@@ -402,13 +400,13 @@ request.forEach((el) => {
                   } else {
                     // Image preview
                     if (fileInput.files && fileInput.files[0]) {
-                     
+                      imagePreview1.style.width = "120px";
                       var reader = new FileReader();
                       reader.onload = function (e) {
-                       
-                        imagePreview1.style.width = "120px";
                         imagePreview1.innerHTML =
-                          '<img src="' + e.target.result + '"/>';
+                          '<img src="' +
+                          e.target.result +
+                          '" width="100%" height="100%" />';
                       };
 
                       reader.readAsDataURL(fileInput.files[0]);
@@ -416,7 +414,7 @@ request.forEach((el) => {
                   }
                 }
                 receipt.addEventListener("change", () => {
-                  fileValidation();
+                  fileValidation_1();
                 });
                 accept.addEventListener("click", () => {
                   if (clean(trxTrackId) < 1) {

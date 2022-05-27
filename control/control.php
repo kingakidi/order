@@ -1136,13 +1136,13 @@
     if (isset($_POST['merchantDeliveryApproval'])) {
         extract($_POST);
         $orderId = (int)clean($orderId);
-        $rName = $_FILES['customerReceipt']['name'];
-        $size = $_FILES['customerReceipt']['size'];
-        $type = $_FILES['customerReceipt']['type'];
-        $tmp = $_FILES['customerReceipt']['tmp_name'];
+        $rName = $_FILES['merchantReceipt']['name'];
+        $size = $_FILES['merchantReceipt']['size'];
+        $type = $_FILES['merchantReceipt']['type'];
+        $tmp = $_FILES['merchantReceipt']['tmp_name'];
       
 
-        if (!empty($_FILES['customerReceipt']) && !empty($trxTrackId) && !empty($orderId)) {
+        if (!empty($_FILES['merchantReceipt']) && !empty($trxTrackId) && !empty($orderId)) {
 
             // CHECK THE FILE SIZE 
             $ext = pathinfo($rName, PATHINFO_EXTENSION);
@@ -1172,7 +1172,10 @@
         extract($_POST);
         
 
-        
+        // <div id='imagePreview' class='mt-3' width='120px'>
+        //     Buyer's Receipt: 
+        //     <img src='./receipts/customer/$customer_receipt' width='100%' height='100%'/>
+        // </div>
         $transaction = getTransitTransactionById($transId);
 
         extract($transaction);
@@ -1183,20 +1186,20 @@
         $escrow_account_number  =  $escrowDetails['account_number'];
         $bank_name = $escrowDetails['bank_code'];
         $escrow_fullname = $escrowDetails['fullname'];
-        echo "<input type='text' value='$trx_track_id' data-order-id=$request_id id='trx_track_id' hidden /><div class='single-request '><p>Escro has approved the buyer payment, Kindly make payment and upload to complete the transaction <br> track id: $trx_track_id Kindly acknowlege </p> 
+        echo "<input type='text' value='$trx_track_id' data-order-id=$request_id id='trx_track_id' hidden /><div class='single-request '><p> Kindly make payment and upload receipt to enable Escrow to proceed using <strong> Tracking ID: $trx_track_id </strong></p> 
         <p>Account Number: $escrow_account_number <br>
         Fullname: $escrow_fullname <br>
         Bank: $bank_name </p>
-        <div id='imagePreview' class='mt-3' width='120px'>
-            Buyer's Receipt: 
-            <img src='./receipts/customer/$customer_receipt' width='100%' height='100%'/>
+        
+       
+        <div id ='imagePreview1' class='mb-1'>
+           
         </div>
-        <br>
-        <div class='m-3'>
-            <label> Select Receipt </label>
+        <div class='mb-3'>
+            <label> Select Seller Receipt </label>
             <input type='file' id='receipt' class='input-order' />
         </div>
-        <div id ='imagePreview1'></div>
+        
         <div id='show-status'></div>
         <div>
             <button id='btn-accept'> Confirm </button>
