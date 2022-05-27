@@ -285,7 +285,7 @@
                             $transRow = $transCheckQuery->fetch_assoc();
                             $transit_level = (int)$transRow['transit_level'];
                             if ($transit_level === 3) {
-                                echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-escrow-id='$escrow_id' data-order-id=$id name='btn-final-transaction-customer-approval'> Awaiting Escrow Approval </button></li>
+                                echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-escrow-id='$escrow_id' data-order-id=$id name='btn-final-transaction-customer-approval' disabled> Awaiting Escrow Approval </button></li>
                             ";
                             }else{
                                 echo "<li><button class='btn-order-declined await-seller' disabled> $status </button></li>";
@@ -1019,9 +1019,9 @@
                         
                     }else if($transit_level === 2){
                     
-                        echo "<li><button class='btn-order-pending' data-order-id=$request_id data-transaction-track-id=$id  name='btn-escrow-approval' disabled> $status  </button></li>";
+                        echo "<li><button class='btn-order-pending'  disabled> $status  </button></li>";
                     }else if($transit_level === 3){
-                        echo "<li><button class='btn-order-pending' disabled> Awaiting Approval from Escrow </button></li>
+                        echo "<li><button class='btn-order-pending' data-order-id=$request_id data-transaction-track-id=$id  name='btn-escrow-approval'> Awaiting your approval </button></li>
                         ";
                     }
                     echo '</ol>';
@@ -1055,6 +1055,9 @@
         echo "<input type='text' value='$trx_track_id' data-order-id=$request_id id='trx_track_id' hidden /><div class='single-request '><p>$customer_username has initiate payment   transaction track id: $trx_track_id Kindly acknowlege </p> 
         <div id='imagePreview' > 
             <img src='./receipts/customer/$customer_receipt' width='100%' height='100%'/>
+        </div>
+        <div id='imagePreview1' > 
+            <img src='./receipts/seller/$seller_receipt' width='100%' height='100%'/>
         </div>
         <div id='show-status'></div>
         <div>
@@ -1147,11 +1150,11 @@
             // CHECK THE FILE SIZE 
             $ext = pathinfo($rName, PATHINFO_EXTENSION);
                         
-            $nCFName = $trxTrackId."_CustomerReceipt_".date("d-m-Y").".".$ext;
+            $nCFName = $trxTrackId."_MerchantReceipt_".date("d-m-Y").".".$ext;
             $cd = dirname(__DIR__, 1);
             if (move_uploaded_file($tmp, $cd."/receipts/seller/$nCFName")) {
                 // CHECK IF REQUEST ID ALREADY EXIST 
-                 $dAQuery= mysqli_multi_query($conn, "UPDATE transit_transaction SET transit_level = 3, transit_transaction.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE transit_transaction.request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE request_table.id = $orderId");
+                 $dAQuery= mysqli_multi_query($conn, "UPDATE transit_transaction SET transit_level = 3, transit_transaction.status = 'Awaiting Escrow Approval' WHERE transit_transaction.request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Escrow Approval' WHERE request_table.id = $orderId");
 
                 if (!$dAQuery) {
                     die($conn->error);
