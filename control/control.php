@@ -408,18 +408,29 @@
 
 
 
-        echo "<input type='text' value='$TRX_TRACK_ID' id='trx_track_id' hidden /><div class='single-request '><p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr>  </p> <p> Escrow Payment Details  <br> Account Number: $escrow_account_number <br> Bank: $escrow_bank_code <br> Fullname: $escrow_fullname <br> TXT_TRCK_ID: $TRX_TRACK_ID</p> 
+        echo "<input type='text' value='$TRX_TRACK_ID' id='trx_track_id' hidden /><div class='single-request '><p>$merchant_username is sending you food <br> Food Label: $outcome $food_name <br> Grams: $gram <br> Amount: $amount <hr>  </p> <p> Escrow Payment Details  <br> Account Number: $escrow_account_number <br> Bank: $escrow_bank_code <br> Fullname: $escrow_fullname <br> TXT_TRCK_ID: $TRX_TRACK_ID</p>
+        <div class='m-3'>
+            <label> Select Receipt </label>
+            <input type='file' id='receipt' class='input-order' />
+        </div>
+        <div id ='imagePreview'></div>
         <div id='show-status'></div>
         <div>
             <button id='btn-accept'> Accept </button>
             <button id='btn-decline'> Decline </button>
         </div> 
-        </div>";
+        </p>";
     }
 
     // ACCEPT ORDER  
     if (isset($_POST['acceptOrder'])) {
         extract($_POST);
+        
+        $rName = $_FILES['customerReceipt']['name'];
+        $size = $_FILES['customerReceipt']['size'];
+        $type = $_FILES['customerReceipt']['type'];
+        $tmp = $_FILES['customerReceipt']['tmp_name'];
+
         $orderId = clean($orderId);
         $trxTrackId = clean($trxTrackId);
         $request = getRequestDetailsById($orderId);
@@ -427,25 +438,40 @@
 
         $customerId = merchantDetailsByUsername($customer_username)['id'];
        
-        // CHECK IF REQUEST ID ALREADY EXIST 
         
-        $rCheckQuery = $conn->query("SELECT * FROM transit_transaction WHERE request_id = $orderId");
         
-        if (!$rCheckQuery) {
-            die($conn->error);
-        }else{
-            if ($rCheckQuery->num_rows > 0) {
-                echo error("Order Already Submitted for this request");
-            }else{
-                $uOrderQuery = mysqli_multi_query($conn, "INSERT INTO `transit_transaction`(request_id, `escrow_id`, `customer_id`, `merchant_id`, `trx_track_id`, `status`, `transit_level`) VALUES ($id, $escrow_id, $customerId, $merchant_id, '$trxTrackId', 'Awaiting Escrow Payment Approval', 1); UPDATE request_table SET request_table.status = 'Awaiting Escrow Payment Approval' WHERE request_table.id = $orderId");
+        if (!empty($_FILES['customerReceipt']) && !empty($trxTrackId) && !empty($orderId)) {
 
-                if (!$uOrderQuery) {
+            // CHECK THE FILE SIZE 
+            $ext = pathinfo($rName, PATHINFO_EXTENSION);
+                        
+            $nCFName = $trxTrackId."_CustomerReceipt_".date("d-m-Y").".".$ext;
+            $cd = dirname(__DIR__, 1);
+            if (move_uploaded_file($tmp, $cd."/receipts/customer/$nCFName")) {
+                // CHECK IF REQUEST ID ALREADY EXIST 
+                $rCheckQuery = $conn->query("SELECT * FROM transit_transaction WHERE request_id = $orderId");
+        
+                if (!$rCheckQuery) {
                     die($conn->error);
                 }else{
-                    echo "Order Submitted";
+                    if ($rCheckQuery->num_rows > 0) {
+                        echo error("Order Already Submitted for this request");
+                    }else{
+                        $uOrderQuery = mysqli_multi_query($conn, "INSERT INTO `transit_transaction`(request_id, `escrow_id`, `customer_id`, `merchant_id`, `trx_track_id`, `status`, `transit_level`, customer_receipt) VALUES ($id, $escrow_id, $customerId, $merchant_id, '$trxTrackId', 'Awaiting Escrow Payment Approval', 1, '$nCFName'); UPDATE request_table SET request_table.status = 'Awaiting Escrow Payment Approval' WHERE request_table.id = $orderId");
+
+                        if (!$uOrderQuery) {
+                            die($conn->error);
+                        }else{
+                            echo "Order Submitted";
+                        }
+                    }
                 }
             }
+            
+        }else{
+            echo error("All fields required");
         }
+        
         
         
    
@@ -1024,6 +1050,9 @@
         $customer_username = merchantDetailsById($customer_id)['username'];
         $trx_track_id = strtoupper($trx_track_id);
         echo "<input type='text' value='$trx_track_id' data-order-id=$request_id id='trx_track_id' hidden /><div class='single-request '><p>$customer_username has initiate payment   transaction track id: $trx_track_id Kindly acknowlege </p> 
+        <div id='imagePreview' > 
+            <img src='./receipts/customer/$customer_receipt' width='100%' height='100%'/>
+        </div>
         <div id='show-status'></div>
         <div>
             <button id='btn-accept'> Approve </button>

@@ -213,6 +213,14 @@ nav div:last-child {
   color: #fff;
 }
 
+#imagePreview {
+  margin: 10px;
+}
+#imagePreview img {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
 /* ORDER SECTION  */
 .pending {
   background-color: #b13408;
