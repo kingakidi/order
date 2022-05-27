@@ -390,7 +390,8 @@ request.forEach((el) => {
 });
 
 // USERS REQUEST
-if (document.getElementsByName("btn-users")) {
+if (document.getElementsByName("btn-users") && document.getElementsByName("btn-users").length > 0) {
+   
   let btnUsers = _("btn-users");
 
   btnUsers.addEventListener("click", () => {
@@ -595,14 +596,16 @@ if (document.getElementsByName("btn-users")) {
           });
         };
       });
-    });
+    }
+    );
   });
 }
 
 // ESCROW REQUEST
-if (document.getElementsByName("btn-escrow")) {
+if (document.getElementsByName("btn-escrow") && document.getElementsByName("btn-escrow").length > 0) {
+    // console.log(document.getElementsByName("btn-escrow"))
   let escrow = _("btn-escrow");
-  // ESCROW REQUEST
+//   ESCROW REQUEST
   escrow.addEventListener("click", () => {
     $.ajax({
       url: url,
