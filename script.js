@@ -359,32 +359,119 @@ request.forEach((el) => {
           bFTMApproval.forEach((el) => {
             el.addEventListener("click", () => {
               console.log(el);
-              if (confirm("Click okay to confirm the delivery status")) {
+              el.addEventListener("click", () => {
+                transId = el.getAttribute("data-transaction-track-id");
+                showPopupContent.innerHTML = "Loading...";
+                popupPage.style.display = "block";
+                let orderId = el.getAttribute("data-order-id");
+                // console.log(popupPage);
+                console.log(orderId);
                 $.ajax({
                   url: url,
                   method: "POST",
                   data: {
-                    merchantDeliveryApproval: true,
-                    orderId: el.getAttribute("data-order-id"),
+                    merchantGetCustomerTransactionDetails: true,
+                    transId: transId,
                   },
-                  beforeSend() {
-                    popupPage.style.display = "block";
-                    showPopupContent.innerHTML =
-                      "<h3 class='text-center'> Sending Delivery Request </h3>";
-                  },
+                  beforeSend() {},
                   success(data) {
-                    popupPage.style.display = "block";
-
-                    if (data === "Merchant delivery submitted successfully") {
-                      showPopupContent.innerHTML = data;
-                      alert(data);
-                      location.reload();
-                    } else {
-                      showPopupContent.innerHTML = data;
-                    }
+                    showPopupContent.innerHTML = data;
                   },
+                }).done(() => {
+                  let accept = _("btn-accept");
+                  let decline = _("btn-decline");
+                  let showStatus = _("show-status");
+                  let trxTrackId = _("trx_track_id");
+                  let imagePreview = _("imagePreview");
+                  imagePreview.style.height = "120px";
+                  imagePreview.style.width = "120px";
+                  console.log(orderId);
+                  accept.addEventListener("click", () => {
+                    if (clean(trxTrackId) > 0) {
+                      $.ajax({
+                        url: url,
+                        method: "POST",
+                        data: {
+                          escrowAcceptCustomerPayment: true,
+                          orderId: orderId,
+                          trxTrackId: trxTrackId.value,
+                        },
+                        beforeSend() {
+                          // accept.disabled = true;
+                          // decline.disabled = true;
+                          showStatus.innerHTML = "";
+                        },
+                        success(data) {
+                          if (data === "Order Submitted") {
+                            showStatus.innerHTML = data;
+                            alert(data);
+                            location.reload();
+                          } else {
+                            showStatus.innerHTML = data;
+                          }
+
+                          // console.log(data);
+                        },
+                      });
+                    } else {
+                      showStatus.innerHTML = error("Invalid Trx Track Id");
+                      s;
+                    }
+                  });
+                  //   DECLINE ORDER
+                  decline.addEventListener("click", () => {
+                    $.ajax({
+                      url: url,
+                      method: "POST",
+                      data: {
+                        declineOrder: true,
+                        orderId: orderId,
+                      },
+                      beforeSend() {
+                        accept.disabled = true;
+                        decline.disabled = true;
+                        showStatus.innerHTML = "";
+                      },
+                      success(data) {
+                        if (data === "Order Declined") {
+                          showStatus.innerHTML = data;
+                          alert(data);
+                          location.reload();
+                        } else {
+                          showStatus.innerHTML = data;
+                        }
+                        // console.log(data);
+                      },
+                    });
+                  });
                 });
-              }
+              });
+              // if (confirm("Click okay to confirm the delivery status")) {
+              //   $.ajax({
+              //     url: url,
+              //     method: "POST",
+              //     data: {
+              //       merchantDeliveryApproval: true,
+              //       orderId: el.getAttribute("data-order-id"),
+              //     },
+              //     beforeSend() {
+              //       popupPage.style.display = "block";
+              //       showPopupContent.innerHTML =
+              //         "<h3 class='text-center'> Sending Delivery Request </h3>";
+              //     },
+              //     success(data) {
+              //       popupPage.style.display = "block";
+
+              //       if (data === "Merchant delivery submitted successfully") {
+              //         showPopupContent.innerHTML = data;
+              //         alert(data);
+              //         location.reload();
+              //       } else {
+              //         showPopupContent.innerHTML = data;
+              //       }
+              //     },
+              //   });
+              // }
             });
           });
         }

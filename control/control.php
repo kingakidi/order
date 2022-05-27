@@ -783,9 +783,11 @@
                     }else{
                         if ($transCheckQuery->num_rows > 0) {
                             $transRow = $transCheckQuery->fetch_assoc();
+                            
                             $transit_level = (int)$transRow['transit_level'];
+                            $transit_id = $transRow['id'];
                             if ($transit_level === 2) {
-                                echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-escrow-id='$escrow_id' data-order-id=$id name='btn-final-transaction-merchant-approval'> Click here to confirm delivery </button></li>
+                                echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-escrow-id='$escrow_id' data-order-id=$id name='btn-final-transaction-merchant-approval' data-transaction-track-id='$transit_id'> Click here to confirm delivery and Payment </button></li>
                             ";
                             }else{
                                 echo "<li><button class='btn-order-declined await-seller' disabled> $status </button></li>";
@@ -1141,4 +1143,39 @@
         }else{
             echo "Merchant delivery submitted successfully";
         }
+    }
+
+    // MERCHANT ACCEPT CUSTOMER PAYEMENT 
+    if (isset($_POST['merchantGetCustomerTransactionDetails'])) {
+        extract($_POST);
+        
+
+        
+        $transaction = getTransitTransactionById($transId);
+    
+        
+        
+
+        extract($transaction);
+        $merchant_username = merchantDetailsById($merchant_id);
+        $customer_username = merchantDetailsById($customer_id)['username'];
+        $trx_track_id = strtoupper($trx_track_id);
+        $escrowDetails = merchantDetailsById($escrow_id);
+        $escrow_account_number  =  $escrowDetails['account_number'];
+        $bank_name = $escrowDetails['bank_code'];
+        $escrow_fullname $escrowDetails['fullname'];
+        echo "<input type='text' value='$trx_track_id' data-order-id=$request_id id='trx_track_id' hidden /><div class='single-request '><p>Escro has approved the buyer payment, Kindly make payment and upload to complete the transaction <br> track id: $trx_track_id Kindly acknowlege </p> 
+        <p>Account Number: $escrow_account_number </p>
+        <p>Fullname: $escrow_fullname </p>
+        <p>Bank: $bank_name </p>
+        <div id='imagePreview' > 
+            <img src='./receipts/customer/$customer_receipt' width='100%' height='100%'/>
+        </div>
+        <div id='show-status'></div>
+        <div>
+            <button id='btn-accept'> Approve </button>
+            <button id='btn-decline'> Decline </button>
+        </div> 
+        </div>";
+
     }
