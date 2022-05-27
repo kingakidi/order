@@ -44,7 +44,7 @@
               }
 
               if ($_SESSION['oUserType'] === 'escrow') {
-                echo '<button class="btn-action" name="btn-escrow" id="btn-escrow">Escrow Requests</button';
+                echo '<button class="btn-action" name="btn-escrow" id="btn-escrow">Escrow Requests</button>';
               }
             
             ?>
