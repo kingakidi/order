@@ -1023,6 +1023,9 @@
                     }else if($transit_level === 3){
                         echo "<li><button class='btn-order-pending' data-order-id=$request_id data-transaction-track-id=$id  name='btn-escrow-approval'> Awaiting your approval </button></li>
                         ";
+                    }else if($transit_level > 3){
+                        echo "<li><button class='btn-order-pending $status'> $status </button></li>
+                        ";
                     }
                     echo '</ol>';
                     $sn++;
@@ -1051,10 +1054,12 @@
         $customer_username = merchantDetailsById($customer_id)['username'];
         $trx_track_id = strtoupper($trx_track_id);
         echo "<input type='text' value='$trx_track_id' data-order-id=$request_id id='trx_track_id' hidden /><div class='single-request '><p>$customer_username has initiate payment   transaction track id: $trx_track_id Kindly acknowlege </p> 
-        <div id='imagePreview' > 
+        <div id='imagePreview' class='d-flex flex-column m-4'> 
+            Buyer's Receipt <br>
             <img src='./receipts/customer/$customer_receipt' width='100%' height='100%'/>
         </div>
-        <div id='imagePreview1' > 
+        <div id='imagePreview1' class='d-flex flex-column' style='width: 120px'> 
+            Seller's Receipt <br>
             <img src='./receipts/seller/$seller_receipt' width='100%' height='100%'/>
         </div>
         <div id='show-status'></div>
@@ -1086,7 +1091,7 @@
             die(" Transaction Check Failed ".$conn->error);
         }else{
             if ($rCheckQuery->num_rows > 0) {
-                $updateTQuery = mysqli_multi_query($conn, "UPDATE `transit_transaction` SET `status`='Awaiting Seller Delivery',`transit_level`='2',`updated_at`= NOW() WHERE request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Seller Delivery' WHERE request_table.id = $orderId");
+                $updateTQuery = mysqli_multi_query($conn, "UPDATE `transit_transaction` SET `status`='completed',`transit_level`='4',`updated_at`= NOW() WHERE request_id = $orderId; UPDATE request_table SET request_table.status = 'completed' WHERE request_table.id = $orderId");
 
 
                 if (!$updateTQuery) {

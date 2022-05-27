@@ -1,5 +1,3 @@
-// console.log(popupPage.style.display);
-
 // TOGGLES
 let orderBtn = _("place-order");
 let showItems = _("show-actions");
@@ -381,7 +379,6 @@ request.forEach((el) => {
                 // let imagePreview = _("imagePreview");
                 // imagePreview.style.width = "120px";
 
-                console.log(orderId);
                 let receipt = _("receipt");
                 function fileValidation_1() {
                   imagePreview1.innerHTML = "";
@@ -755,8 +752,7 @@ if (
             showPopupContent.innerHTML = "Loading...";
             popupPage.style.display = "block";
             let orderId = el.getAttribute("data-order-id");
-            // console.log(popupPage);
-            console.log(orderId);
+
             $.ajax({
               url: url,
               method: "POST",
@@ -776,7 +772,7 @@ if (
               let imagePreview = _("imagePreview");
               imagePreview.style.height = "120px";
               imagePreview.style.width = "120px";
-              console.log(orderId);
+
               accept.addEventListener("click", () => {
                 if (clean(trxTrackId) > 0) {
                   $.ajax({
@@ -793,15 +789,13 @@ if (
                       showStatus.innerHTML = "";
                     },
                     success(data) {
-                      if (data === "Order Submitted") {
+                      if (data === "Submitted Successfully") {
                         showStatus.innerHTML = data;
                         alert(data);
                         location.reload();
                       } else {
                         showStatus.innerHTML = data;
                       }
-
-                      // console.log(data);
                     },
                   });
                 } else {
@@ -831,7 +825,6 @@ if (
                     } else {
                       showStatus.innerHTML = data;
                     }
-                    // console.log(data);
                   },
                 });
               });
