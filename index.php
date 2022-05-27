@@ -36,7 +36,7 @@
           <section class="action">
           
               <button class="btn-action" id="place-order">Send Food</button>
-            <button class="btn-action" id="transaction-table">Transactions</button>
+            <button class="btn-action" id="transaction-table">Food Received</button>
           
             <?php 
               if ($_SESSION['oUserType'] === 'admin') {
@@ -78,6 +78,6 @@
       </div>
     </div>
    <script src="./js/functions.js"></script>
-    <script src="./script.js?v=u898u"></script>
+    <script src="./script.js?v=uyuy"></script>
   </body>
 </html>
