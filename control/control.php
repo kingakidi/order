@@ -1057,7 +1057,7 @@
             <img src='./receipts/customer/$customer_receipt' width='100%' height='100%'/>
         </div>
         <div id='imagePreview1' > 
-            <img src='./receipts/seller/$seller_receipt' width='100%' height='100%'/>
+            <img src='./receipts/seller/$customer_receipt' width='100%' height='100%'/>
         </div>
         <div id='show-status'></div>
         <div>
@@ -1154,7 +1154,7 @@
             $cd = dirname(__DIR__, 1);
             if (move_uploaded_file($tmp, $cd."/receipts/seller/$nCFName")) {
                 // CHECK IF REQUEST ID ALREADY EXIST 
-                 $dAQuery= mysqli_multi_query($conn, "UPDATE transit_transaction SET transit_level = 3, transit_transaction.status = 'Awaiting Escrow Approval' WHERE transit_transaction.request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Escrow Approval' WHERE request_table.id = $orderId");
+                 $dAQuery= mysqli_multi_query($conn, "UPDATE transit_transaction SET transit_level = 3, transit_transaction.status = 'Awaiting Escrow Approval', seller_receipt = '$nCFName' WHERE transit_transaction.request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Escrow Approval' WHERE request_table.id = $orderId");
 
                 if (!$dAQuery) {
                     die($conn->error);
