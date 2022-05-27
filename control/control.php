@@ -457,7 +457,7 @@
                     if ($rCheckQuery->num_rows > 0) {
                         echo error("Order Already Submitted for this request");
                     }else{
-                        $uOrderQuery = mysqli_multi_query($conn, "INSERT INTO `transit_transaction`(request_id, `escrow_id`, `customer_id`, `merchant_id`, `trx_track_id`, `status`, `transit_level`, customer_receipt) VALUES ($id, $escrow_id, $customerId, $merchant_id, '$trxTrackId', 'Awaiting Escrow Payment Approval', 1, '$nCFName'); UPDATE request_table SET request_table.status = 'Awaiting Escrow Payment Approval' WHERE request_table.id = $orderId");
+                        $uOrderQuery = mysqli_multi_query($conn, "INSERT INTO `transit_transaction`(request_id, `escrow_id`, `customer_id`, `merchant_id`, `trx_track_id`, `status`, `transit_level`, customer_receipt) VALUES ($id, $escrow_id, $customerId, $merchant_id, '$trxTrackId', 'Awaiting Seller Payment ', 1, '$nCFName'); UPDATE request_table SET request_table.status = 'Awaiting Seller Payment' WHERE request_table.id = $orderId");
 
                         if (!$uOrderQuery) {
                             die($conn->error);
@@ -786,7 +786,7 @@
                             
                             $transit_level = (int)$transRow['transit_level'];
                             $transit_id = $transRow['id'];
-                            if ($transit_level === 2) {
+                            if ($transit_level === 1) {
                                 echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-escrow-id='$escrow_id' data-order-id=$id name='btn-final-transaction-merchant-approval' data-transaction-track-id='$transit_id'> Click here to confirm delivery and Payment </button></li>
                             ";
                             }else{
@@ -1014,11 +1014,12 @@
                     <li> $trx_track_id </li>";
                     
                     if ($transit_level === 1) {
-                        echo "<li><button class='btn-order-pending' data-order-id=$request_id data-transaction-track-id=$id  name='btn-escrow-approval'> Awaiting your approval </button></li>";
+                        echo "<li><button class='btn-order-pending' disabled> Awaiting Seller Payment </button></li>";
+                      
                         
                     }else if($transit_level === 2){
                     
-                        echo "<li><button class='btn-order-pending' disabled> Awaiting Seller Action </button></li>";
+                        echo "<li><button class='btn-order-pending' data-order-id=$request_id data-transaction-track-id=$id  name='btn-escrow-approval' disabled> $status  </button></li>";
                     }else if($transit_level === 3){
                         echo "<li><button class='btn-order-pending' disabled> Awaiting Approval from Escrow </button></li>
                         ";
@@ -1186,7 +1187,7 @@
         <p>Account Number: $escrow_account_number <br>
         Fullname: $escrow_fullname <br>
         Bank: $bank_name </p>
-        <div id='imagePreview' class='mt-3'>
+        <div id='imagePreview' class='mt-3' width='120px'>
             Buyer's Receipt: 
             <img src='./receipts/customer/$customer_receipt' width='100%' height='100%'/>
         </div>

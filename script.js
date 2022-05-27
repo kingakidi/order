@@ -185,7 +185,7 @@ transactionTable.addEventListener("click", () => {
             let receipt = _("receipt");
             let imagePreview = _("imagePreview");
 
-            function fileValidation() {
+            function fileValidation_merchant() {
               imagePreview.innerHTML = "";
               imagePreview.style.height = "0px";
               imagePreview.style.width = "0px";
@@ -203,10 +203,11 @@ transactionTable.addEventListener("click", () => {
               } else {
                 // Image preview
                 if (fileInput.files && fileInput.files[0]) {
-                  imagePreview.style.height = "150px";
-                  imagePreview.style.width = "150px";
+                  
                   var reader = new FileReader();
                   reader.onload = function (e) {
+                  imagePreview.style.width = "120px";
+
                     imagePreview.innerHTML =
                       '<img src="' + e.target.result + '"/>';
                   };
@@ -216,11 +217,9 @@ transactionTable.addEventListener("click", () => {
               }
             }
             receipt.addEventListener("change", () => {
-              fileValidation();
+              fileValidation_merchant();
             });
             accept.addEventListener("click", () => {
-              console.log(receipt.files);
-
               if (clean(trxTrackId) < 1) {
                 showStatus.innerHTML = error("Invalid Trx Track Id");
               } else if (receipt.files.length < 1) {
@@ -281,7 +280,6 @@ transactionTable.addEventListener("click", () => {
                   } else {
                     showStatus.innerHTML = data;
                   }
-                  // console.log(data);
                 },
               });
             });
@@ -358,118 +356,114 @@ request.forEach((el) => {
           );
           bFTMApproval.forEach((el) => {
             el.addEventListener("click", () => {
-              console.log(el);
-              el.addEventListener("click", () => {
-                transId = el.getAttribute("data-transaction-track-id");
-                showPopupContent.innerHTML = "Loading...";
-                popupPage.style.display = "block";
-                let orderId = el.getAttribute("data-order-id");
-                // console.log(popupPage);
+              transId = el.getAttribute("data-transaction-track-id");
+              showPopupContent.innerHTML = "Loading...";
+              popupPage.style.display = "block";
+              let orderId = el.getAttribute("data-order-id");
+              // console.log(popupPage);
+              console.log(orderId);
+              $.ajax({
+                url: url,
+                method: "POST",
+                data: {
+                  merchantGetCustomerTransactionDetails: true,
+                  transId: transId,
+                },
+                beforeSend() {},
+                success(data) {
+                  showPopupContent.innerHTML = data;
+                },
+              }).done(() => {
+                let accept = _("btn-accept");
+                // let decline = _("btn-decline");
+                let showStatus = _("show-status");
+                let trxTrackId = _("trx_track_id");
+                let imagePreview1 = _("imagePreview1");
+                let imagePreview = _("imagePreview");
+                imagePreview.style.width = '120px'
+                
                 console.log(orderId);
-                $.ajax({
-                  url: url,
-                  method: "POST",
-                  data: {
-                    merchantGetCustomerTransactionDetails: true,
-                    transId: transId,
-                  },
-                  beforeSend() {},
-                  success(data) {
-                    showPopupContent.innerHTML = data;
-                  },
-                }).done(() => {
-                  let accept = _("btn-accept");
-                  // let decline = _("btn-decline");
-                  let showStatus = _("show-status");
-                  let trxTrackId = _("trx_track_id");
-                  let imagePreview = _("imagePreview1");
-                  imagePreview.style.height = "120px";
-                  imagePreview.style.width = "120px";
-                  console.log(orderId);
-                  let receipt = _("receipt");
-                  function fileValidation() {
-                    imagePreview.innerHTML = "";
-                    imagePreview.style.height = "0px";
-                    imagePreview.style.width = "0px";
-                    var fileInput = document.getElementById("receipt");
+                let receipt = _("receipt");
+                function fileValidation() {
+                  imagePreview1.innerHTML = "";
+                  imagePreview1.style.height = "0px";
+                  imagePreview1.style.width = "0px";
+                  var fileInput = document.getElementById("receipt");
 
-                    var filePath = fileInput.value;
+                  var filePath = fileInput.value;
 
-                    // Allowing file type
-                    var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+                  // Allowing file type
+                  var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
 
-                    if (!allowedExtensions.exec(filePath)) {
-                      alert("Invalid file type");
-                      fileInput.value = "";
-                      return false;
-                    } else {
-                      // Image preview
-                      if (fileInput.files && fileInput.files[0]) {
-                        imagePreview.style.height = "150px";
-                        imagePreview.style.width = "150px";
-                        var reader = new FileReader();
-                        reader.onload = function (e) {
-                          imagePreview.innerHTML =
-                            '<img src="' + e.target.result + '"/>';
-                        };
+                  if (!allowedExtensions.exec(filePath)) {
+                    alert("Invalid file type");
+                    fileInput.value = "";
+                    return false;
+                  } else {
+                    // Image preview
+                    if (fileInput.files && fileInput.files[0]) {
+                     
+                      var reader = new FileReader();
+                      reader.onload = function (e) {
+                       
+                        imagePreview1.style.width = "120px";
+                        imagePreview1.innerHTML =
+                          '<img src="' + e.target.result + '"/>';
+                      };
 
-                        reader.readAsDataURL(fileInput.files[0]);
-                      }
+                      reader.readAsDataURL(fileInput.files[0]);
                     }
                   }
-                  receipt.addEventListener("change", () => {
-                    fileValidation();
-                  });
-                  accept.addEventListener("click", () => {
-                    if (clean(trxTrackId) < 1) {
-                      showStatus.innerHTML = error("Invalid Trx Track Id");
-                    } else if (receipt.files.length < 1) {
-                      showStatus.innerHTML = error(
-                        "Receipt of Payment is required"
-                      );
-                    } else if (receipt.files[0].size > 5000000) {
-                      showStatus.innerHTML = error(
-                        " Receipt is too large: Maximum of 500kb"
-                      );
-                    } else {
-                      let fd = new FormData();
-                      fd.append("merchantDeliveryApproval", true);
-                      fd.append("orderId", orderId);
-                      fd.append("trxTrackId", trxTrackId.value);
-                      fd.append("customerReceipt", receipt.files[0]);
-                      $.ajax({
-                        url: url,
-                        method: "POST",
-                        contentType: false,
-                        processData: false,
-                        data: fd,
-                        beforeSend() {
-                          popupPage.style.display = "block";
-                          showPopupContent.innerHTML =
-                            "<h3 class='text-center'> Sending Delivery Request </h3>";
-                        },
-                        success(data) {
-                          popupPage.style.display = "block";
-
-                          if (
-                            data === "Merchant payment submitted successfully"
-                          ) {
-                            showPopupContent.innerHTML = data;
-                            alert(data);
-                            location.reload();
-                          } else {
-                            showPopupContent.innerHTML = data;
-                          }
-                        },
-                      });
-                    }
-                  });
-                  //   DECLINE ORDER
+                }
+                receipt.addEventListener("change", () => {
+                  fileValidation();
                 });
-              });
-              // if (confirm("Click okay to confirm the delivery status")) {
+                accept.addEventListener("click", () => {
+                  if (clean(trxTrackId) < 1) {
+                    showStatus.innerHTML = error("Invalid Trx Track Id");
+                  } else if (receipt.files.length < 1) {
+                    showStatus.innerHTML = error(
+                      "Receipt of Payment is required"
+                    );
+                  } else if (receipt.files[0].size > 5000000) {
+                    showStatus.innerHTML = error(
+                      " Receipt is too large: Maximum of 500kb"
+                    );
+                  } else {
+                    let fd = new FormData();
+                    fd.append("merchantDeliveryApproval", true);
+                    fd.append("orderId", orderId);
+                    fd.append("trxTrackId", trxTrackId.value);
+                    fd.append("merchantReceipt", receipt.files[0]);
+                    $.ajax({
+                      url: url,
+                      method: "POST",
+                      contentType: false,
+                      processData: false,
+                      data: fd,
+                      beforeSend() {
+                        popupPage.style.display = "block";
+                        showPopupContent.innerHTML =
+                          "<h3 class='text-center'> Sending Delivery Request </h3>";
+                      },
+                      success(data) {
+                        popupPage.style.display = "block";
 
-              // }
+                        if (
+                          data === "Merchant payment submitted successfully"
+                        ) {
+                          showPopupContent.innerHTML = data;
+                          alert(data);
+                          location.reload();
+                        } else {
+                          showPopupContent.innerHTML = data;
+                        }
+                      },
+                    });
+                  }
+                });
+                //   DECLINE ORDER
+              });
             });
           });
         }
