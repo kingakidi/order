@@ -1135,15 +1135,35 @@
     if (isset($_POST['merchantDeliveryApproval'])) {
         extract($_POST);
         $orderId = (int)clean($orderId);
+        $rName = $_FILES['customerReceipt']['name'];
+        $size = $_FILES['customerReceipt']['size'];
+        $type = $_FILES['customerReceipt']['type'];
+        $tmp = $_FILES['customerReceipt']['tmp_name'];
       
-        print_r($_POST);
-        // $dAQuery= mysqli_multi_query($conn, "UPDATE transit_transaction SET transit_level = 3, transit_transaction.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE transit_transaction.request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE request_table.id = $orderId");
 
-        // if (!$dAQuery) {
-        //     die($conn->error);
-        // }else{
-        //     echo "Merchant delivery submitted successfully";
-        // }
+        if (!empty($_FILES['customerReceipt']) && !empty($trxTrackId) && !empty($orderId)) {
+
+            // CHECK THE FILE SIZE 
+            $ext = pathinfo($rName, PATHINFO_EXTENSION);
+                        
+            $nCFName = $trxTrackId."_CustomerReceipt_".date("d-m-Y").".".$ext;
+            $cd = dirname(__DIR__, 1);
+            if (move_uploaded_file($tmp, $cd."/receipts/seller/$nCFName")) {
+                // CHECK IF REQUEST ID ALREADY EXIST 
+                 $dAQuery= mysqli_multi_query($conn, "UPDATE transit_transaction SET transit_level = 3, transit_transaction.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE transit_transaction.request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE request_table.id = $orderId");
+
+                if (!$dAQuery) {
+                    die($conn->error);
+                }else{
+                    echo "Merchant payment submitted successfully";
+                }
+                
+            }
+            
+        }else{
+            echo error("All fields required");
+        }
+       
     }
 
     // MERCHANT ACCEPT CUSTOMER PAYEMENT 

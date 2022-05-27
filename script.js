@@ -452,7 +452,7 @@ request.forEach((el) => {
                           popupPage.style.display = "block";
 
                           if (
-                            data === "Merchant delivery submitted successfully"
+                            data === "Merchant payment submitted successfully"
                           ) {
                             showPopupContent.innerHTML = data;
                             alert(data);
