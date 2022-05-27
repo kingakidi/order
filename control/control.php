@@ -1136,13 +1136,14 @@
         extract($_POST);
         $orderId = (int)clean($orderId);
       
-        $dAQuery= mysqli_multi_query($conn, "UPDATE transit_transaction SET transit_level = 3, transit_transaction.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE transit_transaction.request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE request_table.id = $orderId");
+        print_r($_POST);
+        // $dAQuery= mysqli_multi_query($conn, "UPDATE transit_transaction SET transit_level = 3, transit_transaction.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE transit_transaction.request_id = $orderId; UPDATE request_table SET request_table.status = 'Awaiting Buyer Delivery Acknowledgement' WHERE request_table.id = $orderId");
 
-        if (!$dAQuery) {
-            die($conn->error);
-        }else{
-            echo "Merchant delivery submitted successfully";
-        }
+        // if (!$dAQuery) {
+        //     die($conn->error);
+        // }else{
+        //     echo "Merchant delivery submitted successfully";
+        // }
     }
 
     // MERCHANT ACCEPT CUSTOMER PAYEMENT 
@@ -1152,9 +1153,6 @@
 
         
         $transaction = getTransitTransactionById($transId);
-    
-        
-        
 
         extract($transaction);
         $merchant_username = merchantDetailsById($merchant_id);
@@ -1163,18 +1161,25 @@
         $escrowDetails = merchantDetailsById($escrow_id);
         $escrow_account_number  =  $escrowDetails['account_number'];
         $bank_name = $escrowDetails['bank_code'];
-        $escrow_fullname $escrowDetails['fullname'];
+        $escrow_fullname = $escrowDetails['fullname'];
         echo "<input type='text' value='$trx_track_id' data-order-id=$request_id id='trx_track_id' hidden /><div class='single-request '><p>Escro has approved the buyer payment, Kindly make payment and upload to complete the transaction <br> track id: $trx_track_id Kindly acknowlege </p> 
-        <p>Account Number: $escrow_account_number </p>
-        <p>Fullname: $escrow_fullname </p>
-        <p>Bank: $bank_name </p>
-        <div id='imagePreview' > 
+        <p>Account Number: $escrow_account_number <br>
+        Fullname: $escrow_fullname <br>
+        Bank: $bank_name </p>
+        <div id='imagePreview' class='mt-3'>
+            Buyer's Receipt: 
             <img src='./receipts/customer/$customer_receipt' width='100%' height='100%'/>
         </div>
+        <br>
+        <div class='m-3'>
+            <label> Select Receipt </label>
+            <input type='file' id='receipt' class='input-order' />
+        </div>
+        <div id ='imagePreview1'></div>
         <div id='show-status'></div>
         <div>
-            <button id='btn-accept'> Approve </button>
-            <button id='btn-decline'> Decline </button>
+            <button id='btn-accept'> Confirm </button>
+            
         </div> 
         </div>";
 
