@@ -1020,7 +1020,7 @@
                     
                         echo "<li><button class='btn-order-pending' disabled> Awaiting Seller Action </button></li>";
                     }else if($transit_level === 3){
-                        echo "<li><button class='btn-order-pending' disabled> Awaiting buyer Acknowledgement </button></li>
+                        echo "<li><button class='btn-order-pending' disabled> Awaiting Approval from Escrow </button></li>
                         ";
                     }
                     echo '</ol>';
