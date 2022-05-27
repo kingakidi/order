@@ -183,7 +183,7 @@ transactionTable.addEventListener("click", () => {
             let showStatus = _("show-status");
             let trxTrackId = _("trx_track_id");
             let receipt = _("receipt");
-            let imagePreview = _("imagePreview1");
+            let imagePreview = _("imagePreview");
 
             function fileValidation() {
               imagePreview.innerHTML = "";
@@ -382,7 +382,7 @@ request.forEach((el) => {
                   // let decline = _("btn-decline");
                   let showStatus = _("show-status");
                   let trxTrackId = _("trx_track_id");
-                  let imagePreview = _("imagePreview");
+                  let imagePreview = _("imagePreview1");
                   imagePreview.style.height = "120px";
                   imagePreview.style.width = "120px";
                   console.log(orderId);

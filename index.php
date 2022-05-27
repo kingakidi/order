@@ -78,6 +78,6 @@
       </div>
     </div>
    <script src="./js/functions.js"></script>
-    <script src="./script.js?v=89u"></script>
+    <script src="./script.js?v=u8u"></script>
   </body>
 </html>

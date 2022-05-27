@@ -285,7 +285,7 @@
                             $transRow = $transCheckQuery->fetch_assoc();
                             $transit_level = (int)$transRow['transit_level'];
                             if ($transit_level === 3) {
-                                echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-escrow-id='$escrow_id' data-order-id=$id name='btn-final-transaction-customer-approval'> Click here to approve delivery </button></li>
+                                echo "<li><button class='btn-order-pending' data-merchant-id=$merchant_id data-escrow-id='$escrow_id' data-order-id=$id name='btn-final-transaction-customer-approval'> Awaiting Escrow Approval </button></li>
                             ";
                             }else{
                                 echo "<li><button class='btn-order-declined await-seller' disabled> $status </button></li>";
