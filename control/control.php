@@ -1042,8 +1042,6 @@
 
     if (isset($_POST['getEscrowTransactionDetails'])) {
         extract($_POST);
-       
-
 
         $transaction = getTransitTransactionById($transId);
         
@@ -1057,7 +1055,7 @@
             <img src='./receipts/customer/$customer_receipt' width='100%' height='100%'/>
         </div>
         <div id='imagePreview1' > 
-            <img src='./receipts/seller/$customer_receipt' width='100%' height='100%'/>
+            <img src='./receipts/seller/$seller_receipt' width='100%' height='100%'/>
         </div>
         <div id='show-status'></div>
         <div>
