@@ -105,7 +105,7 @@
         $uQuery = $conn->query("SELECT * FROM users WHERE users.username = '$username' LIMIT 1");
 
         if (!$uQuery) {
-            die("Unable to verify username");
+            die($conn->error ."Unable to verify username");
         }else{
             if($uQuery->num_rows > 0){
                 $row = $uQuery->fetch_assoc();
@@ -1053,14 +1053,27 @@
         $merchant_username = merchantDetailsById($merchant_id);
         $customer_username = merchantDetailsById($customer_id)['username'];
         $trx_track_id = strtoupper($trx_track_id);
-        echo "<input type='text' value='$trx_track_id' data-order-id=$request_id id='trx_track_id' hidden /><div class='single-request '><p>$customer_username has initiate payment   transaction track id: $trx_track_id Kindly acknowlege </p> 
+        
+         $request = getRequestDetailsById($request_id);
+        
+        extract($request);
+     
+        
+       
+        $grams = $request['gram'];
+        $amount = $request['amount'];
+        $fullname = ucwords($fullname);
+        echo "<input type='text' value='$trx_track_id' data-order-id=$request_id id='trx_track_id' hidden /><div class='single-request '><p>$customer_username has initiate payment   transaction track id: $trx_track_id Amount: $amount,  Gram: $grams. Kindly acknowlege </p> 
         <div id='imagePreview' class='d-flex flex-column m-4'> 
+          
             Buyer's Receipt <br>
             <img src='./receipts/customer/$customer_receipt' width='100%' height='100%'/>
+            <a href='./receipts/customer/$customer_receipt' target='_blank'>Preview Buyer's Receipt </a>
         </div>
         <div id='imagePreview1' class='d-flex flex-column' style='width: 120px'> 
             Seller's Receipt <br>
             <img src='./receipts/seller/$seller_receipt' width='100%' height='100%'/>
+            <a href='./receipts/seller/$seller_receipt' target='_blank'>  Preview Seller's Receipt </a>
         </div>
         <div id='show-status'></div>
         <div>
